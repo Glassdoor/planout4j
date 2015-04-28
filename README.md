@@ -1,6 +1,3 @@
-# THIS IS DRAFT VERSION
-
-
 # PlanOut4J
 
 PlanOut4J is a Java-based implementation of Facebook's [PlanOut], an A/B testing framework designed to conduct experiments on the web at scale. 
