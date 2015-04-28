@@ -1,0 +1,16 @@
+namespace: 
+  name: segments_overflow
+  unit: user_guid
+  segments: 100
+
+experiment_definitions:
+  - definition: Sample_Experiment_1
+    assign: !planout x = 0;
+
+default_experiment: Sample_Experiment_1
+
+experiment_sequence:
+  - action: add
+    definition: Sample_Experiment
+    name: Instance_of_Sample_Exp_1
+    segments: 40

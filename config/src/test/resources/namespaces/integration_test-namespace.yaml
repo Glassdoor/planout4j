@@ -1,0 +1,59 @@
+namespace: 
+  # name comes from the file name
+  # optional namespace-level salt, otherwise the name is used
+  salt: smoke_test
+  # the primary unit for this namespace
+  unit: user_guid
+  # how many segments to split the traffic into
+  segments: 100
+
+
+# define all experiments here once
+
+experiment_definitions:
+
+  - definition: Sample_Experiment_1  # must be unique within namespace
+    # PLanOut DSL, see http://facebook.github.io/planout/docs/planout-language-reference.html
+    assign: !planout |
+      group_size = uniformChoice(choices=[1, 10], unit=userid);
+      specific_goal = bernoulliTrial(p=0.8, unit=userid);
+      if (specific_goal) {
+        ratings_per_user_goal = uniformChoice(
+        choices=[8, 16, 32, 64], unit=userid);
+        ratings_goal = group_size * ratings_per_user_goal;
+      }
+
+  - definition: Sample_Experiment_2
+    assign: !planout |
+        prob_collapse = randomFloat(min=0.0, max=1.0, unit=sourceid);
+        collapse = bernoulliTrial(p=prob_collapse, unit=[storyid, viewerid]);
+        
+  - definition: Sample_Default
+    assign: !planout |
+        ratings_goal = 1;
+        something_else = true;
+
+
+# default experiment is required, refer to an existing definition from above
+default_experiment: Sample_Default
+
+
+# instantiate experiments here with "add" action, possibly multiple times
+# each instance gets its own allotment of traffic
+# use "remove" action to remove a previously added experiment
+        
+experiment_sequence:
+  - action: add                       # required, one of add, remove
+    definition: Sample_Experiment_1   # required for add, refers to an experiment defined in "experiment_definitions"
+    name: Instance_of_Sample_Exp_1    # must be unique within experiment_sequence
+    segments: 40                      # how many segments to allocate to this experiment
+  - action: add
+    definition: Sample_Experiment_2
+    name: Instance_of_Sample_Exp_2
+    segments: 20
+  - action: remove
+    name: Instance_of_Sample_Exp_1
+  - action: add
+    definition: Sample_Experiment_2
+    name: New_Instance_of_Sample_Exp_2
+    segments: 30
