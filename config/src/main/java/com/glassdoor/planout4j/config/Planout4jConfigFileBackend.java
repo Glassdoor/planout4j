@@ -24,11 +24,10 @@ public class Planout4jConfigFileBackend implements Planout4jConfigBackend {
    private String outputFileExtension;
 
    public void configure(final Config config) {
-      final Config myConfig = config.getConfig("file");
-      sourceDirHierarchy = myConfig.getString("sourceDirHierarchy").replace('/', File.separatorChar);
-      destDirHierarchy = myConfig.getString("destDirHierarchy").replace('/', File.separatorChar);
-      inputFileNamesPattern = myConfig.getString("inputFileNamesPattern");
-      outputFileExtension = myConfig.getString("outputFileExtension");
+      sourceDirHierarchy = config.getString("sourceDirHierarchy").replace('/', File.separatorChar);
+      destDirHierarchy = config.getString("destDirHierarchy").replace('/', File.separatorChar);
+      inputFileNamesPattern = config.getString("inputFileNamesPattern");
+      outputFileExtension = config.getString("outputFileExtension");
    }
 
    @Override

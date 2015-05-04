@@ -25,7 +25,11 @@ public class Planout4jFileRepositoryITest {
    @Before
    public void setup() {
       fileBackend = new Planout4jConfigFileBackend();
-      fileBackend.configure(ConfigFactory.load("planout4j-config_test"));
+      fileBackend.configure(ConfigFactory.parseMap(
+              ImmutableMap.of("sourceDirHierarchy", "src/test/resources/namespaces",
+                              "destDirHierarchy", "src/test/resources/namespaces/output",
+                              "inputFileNamesPattern", "*",
+                              "outputFileExtension", ".yaml")));
    }
    
    @After

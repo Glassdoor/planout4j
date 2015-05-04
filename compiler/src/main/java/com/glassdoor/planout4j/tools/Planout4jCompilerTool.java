@@ -1,4 +1,4 @@
-package com.glassdoor.planout4j.compiler;
+package com.glassdoor.planout4j.tools;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -9,23 +9,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.PropertyConfigurator;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.common.io.CharStreams;
 
+import com.glassdoor.planout4j.compiler.Planout4jConfigParser;
+import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
 import com.glassdoor.planout4j.config.ValidationException;
 
 /**
  * Command-line interface to {@link com.glassdoor.planout4j.config.NamespaceConfigBuilder}.
- * Usage: <code>mvn exec:java -Dexec.mainClass=com.glassdoor.planout4j.compiler.Tool -Dtool=tool -Dinput=input_file -Doutput=json_file</code>
+ * Usage: <code>mvn exec:java -Dexec.mainClass=com.glassdoor.planout4j.tools.Planout4jCompilerTool -Dtool=tool -Dinput=input_file -Doutput=json_file</code>
  * where <code>tool</code> is one of the static methods of this class and <code>input_file</code> and <code>output_file</code>
  * are if either input or output files are not specified, the code will use stdin and stdout respectively.
  */
-public class Tool {
+public class Planout4jCompilerTool {
    
-    private static final Logger LOG = LoggerFactory.getLogger(Tool.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Planout4jCompilerTool.class);
 
     public static void compilePlanout4jConfig(final Reader in, final Writer out) throws IOException, ValidationException {
         JSONValue.writeJSONString(Planout4jConfigParser.parseAndValidateYAML(in), out);
@@ -63,18 +64,17 @@ public class Tool {
 
 
     public static void main(final String[] args) throws Throwable {
-        initLogging();
-        LOG.info("Starting planout4j compiler tool");
+        ToolsSupport.initLogging("compiler tool");
         final String tool = System.getProperty("tool");
         if (StringUtils.isBlank(tool)) {
             final List<String> tools = new ArrayList<>();
-            for (Method m : Tool.class.getMethods()) {
+            for (Method m : Planout4jCompilerTool.class.getMethods()) {
                 if (Modifier.isStatic(m.getModifiers()) && !m.getName().equals("main")) {
                     tools.add(m.getName());
                 }
             }
             System.err.printf("Usage: java -Dtool=[%s] %s [-Dinput=file] [-Doutput=file]\n",
-                    StringUtils.join(tools, '|'), Tool.class);
+                    StringUtils.join(tools, '|'), Planout4jCompilerTool.class);
             System.exit(1);
         }
 
@@ -83,7 +83,7 @@ public class Tool {
         final String outFile = System.getProperty("output");
         final Writer out = StringUtils.isBlank(outFile) ? new OutputStreamWriter(System.out) : new FileWriter(outFile);
         try {
-            Tool.class.getMethod(tool, Reader.class, Writer.class).invoke(null, in, out);
+            Planout4jCompilerTool.class.getMethod(tool, Reader.class, Writer.class).invoke(null, in, out);
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }
@@ -95,8 +95,4 @@ public class Tool {
         }
     }
     
-    private static void initLogging(){
-        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("planout4j-compiler-log4j.properties"));
-    }
-
 }

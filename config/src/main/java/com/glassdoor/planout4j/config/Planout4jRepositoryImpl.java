@@ -2,10 +2,8 @@ package com.glassdoor.planout4j.config;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -20,15 +18,9 @@ public class Planout4jRepositoryImpl implements Planout4jRepository {
    private Planout4jConfigBackend configBackend;
 
    public Planout4jRepositoryImpl() {
-      final Config config = ConfigFactory.load("planout4j-config");
-      final String targetBackend = config.getString("target-backend");
-      LOG.debug("Using {} as target backend", targetBackend);
-      try {
-         configBackend = ClassUtils.getClass(targetBackend).asSubclass(Planout4jConfigBackend.class).newInstance();
-         configBackend.configure(config);
-      } catch (Exception e) {
-         throw new RuntimeException("Failed to load config backend " + targetBackend, e);
-      }
+      final Config config = ConfigFactory.load("planout4j-repository").getConfig("planout4j").getConfig("backend");
+      configBackend = Planout4jConfigBackendFactory.createAndConfigure(config, config.getString("source"));
+      LOG.info("Using {} as the backend", configBackend.persistenceDestination());
    }
 
    @Override

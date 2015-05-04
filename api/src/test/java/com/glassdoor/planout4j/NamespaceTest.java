@@ -66,7 +66,7 @@ public class NamespaceTest {
     }
 
     private NamespaceConfig loadConfig(String fileName) throws Exception {
-        return Planout4jConfigParser.parseAndValidateJSON((new InputStreamReader(getClass().getResourceAsStream(format("/%s.json", fileName)))));
+        return Planout4jConfigParser.parseAndValidateJSON((new InputStreamReader(getClass().getResourceAsStream(format("/namespaces/%s.json", fileName)))));
     }
 
 }
