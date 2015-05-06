@@ -77,8 +77,10 @@
         <snakeyaml.version>1.15</snakeyaml.version>
         <typesafe-config.version>1.2.1</typesafe-config.version>
         <spring.version>4.1.6.RELEASE</spring.version>
+        <jedis.version>2.7.2</jedis.version>
         <assertj.version>2.0.0</assertj.version>
         <junit.version>4.12</junit.version>
+        <embedded-redis.version>0.6</embedded-redis.version>
     </properties>
 
 
@@ -222,6 +224,12 @@
             </dependency>
 
             <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
@@ -231,6 +239,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.kstyrc</groupId>
+                <artifactId>embedded-redis</artifactId>
+                <version>${embedded-redis.version}</version>
             </dependency>
 
             <dependency>
