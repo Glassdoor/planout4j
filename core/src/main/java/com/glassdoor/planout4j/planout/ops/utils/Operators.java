@@ -7,7 +7,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 
 import com.glassdoor.planout4j.planout.ops.base.PlanOutOp;
 import com.glassdoor.planout4j.planout.ops.core.*;
@@ -24,9 +25,9 @@ import static java.lang.String.format;
 public class Operators {
 
     /** maps operator string representation to implementing class */
-    public static final Map<String, Class<? extends PlanOutOp>> operators;
+    public static final BiMap<String, Class<? extends PlanOutOp>> operators;
     static {
-        operators = new ImmutableMap.Builder<String, Class<? extends PlanOutOp>>()
+        operators = new ImmutableBiMap.Builder<String, Class<? extends PlanOutOp>>()
                 .put("literal", Literal.class)
                 .put("get", Get.class)
                 .put("seq", Seq.class)
@@ -146,7 +147,9 @@ public class Operators {
      * @return String joined pretty representations of all params
      */
     public static String join(final List params) {
-        return join(params, ", ");
+        final int maxParamsToShow = 20;
+        return params.size() <= maxParamsToShow ? join(params, ", ")
+                : format("%s, ... (%s more)", join(params.subList(0, maxParamsToShow)), params.size() - maxParamsToShow);
     }
 
     public static String indent(final String s, final int n) {
