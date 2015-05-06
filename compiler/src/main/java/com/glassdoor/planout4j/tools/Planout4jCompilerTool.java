@@ -35,7 +35,7 @@ public class Planout4jCompilerTool {
     public static void compilePlanoutDSL(final Reader in, final Writer out) throws IOException, ValidationException {
         JSONValue.writeJSONString(PlanoutDSLCompiler.dsl_to_json(CharStreams.toString(in)), out);
     }
-    
+
     /**
     * The method compiles all supplied namespaces, keeping track of invalid namespace along the way. Throws
     * ValidationException at the end if any invalid namespaces are supplied.
