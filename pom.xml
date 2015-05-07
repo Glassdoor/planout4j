@@ -55,6 +55,7 @@
         <module>compiler</module>
 	    <module>config</module>
 		<module>api</module>
+        <module>tools</module>
     </modules>
 
 
@@ -65,6 +66,7 @@
         <maven-surefire.version>2.18.1</maven-surefire.version>
         <maven-source.version>2.4</maven-source.version>
         <maven-javadoc.version>2.10.3</maven-javadoc.version>
+        <maven-shade.version>2.3</maven-shade.version>
         <sonatype-plugin.version>1.6.5</sonatype-plugin.version>
         <slf4j.version>1.7.12</slf4j.version>
         <log4j12.version>1.2.17</log4j12.version>
@@ -78,6 +80,7 @@
         <typesafe-config.version>1.2.1</typesafe-config.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <jedis.version>2.7.2</jedis.version>
+        <argparse4j.version>0.5.0</argparse4j.version>
         <assertj.version>2.0.0</assertj.version>
         <junit.version>4.12</junit.version>
         <embedded-redis.version>0.6</embedded-redis.version>
@@ -240,6 +243,12 @@
             </dependency>
 
             <dependency>
+                <groupId>net.sourceforge.argparse4j</groupId>
+                <artifactId>argparse4j</artifactId>
+                <version>${argparse4j.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
@@ -270,6 +279,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>planout4j-compiler</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>planout4j-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

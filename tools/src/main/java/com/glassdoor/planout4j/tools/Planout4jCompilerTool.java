@@ -20,7 +20,7 @@ import com.glassdoor.planout4j.config.ValidationException;
 
 /**
  * Command-line interface to {@link com.glassdoor.planout4j.config.NamespaceConfigBuilder}.
- * Usage: <code>mvn exec:java -Dexec.mainClass=com.glassdoor.planout4j.tools.Planout4jCompilerTool -Dtool=tool -Dinput=input_file -Doutput=json_file</code>
+ * Usage: <code>mvn exec:java -Dexec.mainClass=Planout4jCompilerTool -Dtool=tool -Dinput=input_file -Doutput=json_file</code>
  * where <code>tool</code> is one of the static methods of this class and <code>input_file</code> and <code>output_file</code>
  * are if either input or output files are not specified, the code will use stdin and stdout respectively.
  */
