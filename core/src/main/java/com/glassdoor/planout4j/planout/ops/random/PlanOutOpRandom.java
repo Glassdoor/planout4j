@@ -67,6 +67,9 @@ public abstract class PlanOutOpRandom<T> extends PlanOutOpSimple<T> {
         }
         final String unitStr = StringUtils.join(getUnit(appendUnit), '.');
         final String hashStr = format("%s.%s", fullSalt, unitStr);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("full hash string for {} is {}", pretty(), hashStr);
+        }
         return Long.parseLong(Hashing.sha1().hashString(hashStr, UTF8).toString().substring(0,15), 16);
     }
 

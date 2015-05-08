@@ -132,10 +132,28 @@ public class NamespaceConfig {
     }
 
     /**
+     * Get an active experiment config by its definition key (primarily for debugging purposes).
+     * @param definition definition key
+     * @return ExperimentConfig (null if none with the specified definition as key)
+     */
+    public ExperimentConfig getExperimentConfig(final String definition) {
+        return allExpDefs.get(definition);
+    }
+
+    /**
      * @return number of active experiment instances
      */
     public int getActiveExperimentsCount() {
         return activeExperiments.size();
+    }
+
+    /**
+     * Get an active experiment by name (primarily for debugging purposes).
+     * @param name experiment name
+     * @return Experiment instance, null if there is no active experiment with the specified name
+     */
+    public Experiment getActiveExperiment(final String name) {
+        return activeExperiments.get(name);
     }
 
     /**

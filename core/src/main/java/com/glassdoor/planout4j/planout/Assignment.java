@@ -1,11 +1,12 @@
 package com.glassdoor.planout4j.planout;
 
-import com.glassdoor.planout4j.planout.ops.random.PlanOutOpRandom;
-import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import java.util.Collections;
 import java.util.Map;
+
+import org.apache.commons.lang3.reflect.FieldUtils;
+import com.google.common.collect.ImmutableMap;
+
+import com.glassdoor.planout4j.planout.ops.random.PlanOutOpRandom;
 
 import static java.lang.String.format;
 
@@ -74,7 +75,7 @@ public class Assignment extends Mapper {
             if (!random.hasArg("salt")) {
                 random.setArg("salt", name);
             }
-            data.put(name, random.execute(this));
+            data.put(name, random.executeWithLogging(this));
         } else {
             data.put(name, value);
         }

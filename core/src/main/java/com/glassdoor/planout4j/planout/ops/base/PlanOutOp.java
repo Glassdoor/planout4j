@@ -1,12 +1,15 @@
 package com.glassdoor.planout4j.planout.ops.base;
 
-import com.glassdoor.planout4j.planout.Mapper;
-import com.glassdoor.planout4j.util.Helper;
-import com.glassdoor.planout4j.planout.ops.utils.Operators;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.glassdoor.planout4j.planout.Mapper;
+import com.glassdoor.planout4j.planout.ops.utils.Operators;
+import com.glassdoor.planout4j.util.Helper;
 
 import static com.google.common.base.Preconditions.*;
 import static java.lang.String.format;
@@ -16,6 +19,8 @@ import static java.lang.String.format;
  * @param <T> expected evaluation type
  */
 public abstract class PlanOutOp<T> {
+
+    protected static final Logger LOG = LoggerFactory.getLogger(PlanOutOp.class);
 
     protected final Map<String, Object> args;
 
@@ -33,6 +38,8 @@ public abstract class PlanOutOp<T> {
      */
     protected PlanOutOp() {
         args = new HashMap<>();
+        args.put("op", Operators.operators.inverse().get(getClass()));
+
     }
 
     /**
@@ -40,7 +47,15 @@ public abstract class PlanOutOp<T> {
      * @param mapper instance of Interpreter evaluating the parser tree
      * @return result of applying the operator to its arguments
      */
-    public abstract T execute(final Mapper mapper);
+    protected abstract T execute(final Mapper mapper);
+
+    public T executeWithLogging(final Mapper mapper) {
+        final T res = execute(mapper);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Result of evaluating {} is {}", pretty(), res);
+        }
+        return res;
+    }
 
     public String prettyArgs() {
         return Operators.prettyParamFormat(args);
