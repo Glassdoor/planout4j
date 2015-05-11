@@ -151,6 +151,13 @@ public class NamespaceConfig {
     }
 
     /**
+     * @return names of all experiment configs (aka definitions)
+     */
+    public Collection<String> getExperimentConfigNames() {
+        return allExpDefs.keySet();
+    }
+
+    /**
      * @return number of active experiment instances
      */
     public int getActiveExperimentsCount() {
@@ -164,6 +171,13 @@ public class NamespaceConfig {
      */
     public Experiment getActiveExperiment(final String name) {
         return activeExperiments.get(name);
+    }
+
+    /**
+     * @return names of all active experiments
+     */
+    public Collection<String> getActiveExperimentNames() {
+        return activeExperiments.keySet();
     }
 
     /**
@@ -230,23 +244,6 @@ public class NamespaceConfig {
         final List<Integer> usedSegments = new Sample<>(new ArrayList<>(availableSegments), segments, expName).eval();
         availableSegments.removeAll(usedSegments);
         return usedSegments;
-    }
-
-
-    public Experiment getActiveExperiment(final String name) {
-        return activeExperiments.get(name);
-    }
-
-    public Collection<String> getActiveExperimentNames() {
-        return activeExperiments.keySet();
-    }
-
-    public ExperimentConfig getExperimentDefinition(final String name) {
-        return allExpDefs.get(name);
-    }
-
-    public Collection<String> getExperimentDefinitionNames() {
-        return allExpDefs.keySet();
     }
 
 

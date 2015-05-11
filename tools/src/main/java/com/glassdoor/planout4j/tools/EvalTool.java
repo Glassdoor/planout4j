@@ -66,10 +66,10 @@ public class EvalTool {
                     return null;
                 }
             } else if (defStr != null) {
-                final ExperimentConfig expConf = nsConf.getExperimentDefinition(defStr);
+                final ExperimentConfig expConf = nsConf.getExperimentConfig(defStr);
                 if (expConf == null) {
                     LOG.error("No experiment definition named '{}' exists in namespace '{}'. All experiment definitions: {}",
-                            defStr, name, nsConf.getExperimentDefinitionNames());
+                            defStr, name, nsConf.getExperimentConfigNames());
                     return null;
                 } else {
                     exp = new Experiment(defStr,
