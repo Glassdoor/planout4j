@@ -60,7 +60,7 @@ public class Interpreter extends Mapper {
     public Object evaluate(final Object planoutCode) {
         // if the object is a PlanOut operator, execute it.
         if (Operators.isOperator(planoutCode)) {
-            return Operators.operatorInstance(planoutCode).execute(this);
+            return Operators.operatorInstance(planoutCode).executeWithLogging(this);
         }
         // if the object is a list, iterate over the list and evaluate each element
         else if (planoutCode instanceof List) {
