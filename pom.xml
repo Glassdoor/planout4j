@@ -81,6 +81,8 @@
         <spring.version>4.1.6.RELEASE</spring.version>
         <jedis.version>2.7.2</jedis.version>
         <argparse4j.version>0.5.0</argparse4j.version>
+        <text-table.version>1.0</text-table.version>
+        <gson.version>2.3.1</gson.version>
         <assertj.version>2.0.0</assertj.version>
         <junit.version>4.12</junit.version>
         <embedded-redis.version>0.6</embedded-redis.version>
@@ -246,6 +248,18 @@
                 <groupId>net.sourceforge.argparse4j</groupId>
                 <artifactId>argparse4j</artifactId>
                 <version>${argparse4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ow2.sirocco</groupId>
+                <artifactId>sirocco-text-table-formatter</artifactId>
+                <version>${text-table.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
             </dependency>
 
             <dependency>

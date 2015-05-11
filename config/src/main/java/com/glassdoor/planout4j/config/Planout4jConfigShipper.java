@@ -6,6 +6,11 @@ package com.glassdoor.planout4j.config;
  */
 public interface Planout4jConfigShipper {
 
-   void ship() throws ValidationException;
+   /**
+    * "Ships" configs from YAML at source to JSON at target.
+    * @param dryRun if true, will <b>not</b> modify target backend (e.g. compile and validate only)
+    * @throws ValidationException
+    */
+   void ship(final boolean dryRun) throws ValidationException;
 
 }

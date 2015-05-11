@@ -12,6 +12,7 @@ import org.apache.commons.math.random.JDKRandomGenerator;
 import org.apache.commons.math.random.RandomData;
 import org.apache.commons.math.random.RandomDataImpl;
 import org.apache.log4j.MDC;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,6 +22,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.SetMultimap;
 
+import com.glassdoor.planout4j.config.Planout4jTestConfigHelper;
 import com.glassdoor.planout4j.spring.Planout4jAppContext;
 
 import static org.junit.Assert.*;
@@ -29,6 +31,11 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Planout4jAppContext.class)
 public class ConcurrentAccessTest {
+
+    @BeforeClass
+    public static void before() {
+        Planout4jTestConfigHelper.setSystemProperties(false);
+    }
 
     @Resource
     private NamespaceFactory namespaceFactory;

@@ -3,15 +3,12 @@ package com.glassdoor.planout4j;
 import java.io.InputStreamReader;
 
 import org.junit.Test;
-
 import com.google.common.collect.ImmutableMap;
 
-import com.glassdoor.planout4j.compiler.Planout4jConfigParser;
+import com.glassdoor.planout4j.compiler.JSONConfigParser;
 
 import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Test mapping users to segments, segments to experiments.
@@ -66,7 +63,7 @@ public class NamespaceTest {
     }
 
     private NamespaceConfig loadConfig(String fileName) throws Exception {
-        return Planout4jConfigParser.parseAndValidateJSON((new InputStreamReader(getClass().getResourceAsStream(format("/namespaces/%s.json", fileName)))));
+        return new JSONConfigParser().parseAndValidate(new InputStreamReader(getClass().getResourceAsStream(format("/namespaces/%s.json", fileName))), null);
     }
 
 }

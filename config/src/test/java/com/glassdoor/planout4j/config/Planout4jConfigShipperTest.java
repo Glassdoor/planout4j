@@ -6,7 +6,8 @@ public class Planout4jConfigShipperTest {
 
     @Test
     public void testDefault() throws ValidationException {
-        new Planout4jConfigShipperImpl().ship();
+        Planout4jTestConfigHelper.setSystemProperties(true);
+        new Planout4jConfigShipperImpl().ship(false);
     }
 
 }

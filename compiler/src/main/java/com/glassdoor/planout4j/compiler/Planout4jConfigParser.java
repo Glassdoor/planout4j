@@ -7,96 +7,60 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import com.glassdoor.planout4j.NamespaceConfig;
-import com.glassdoor.planout4j.config.KeyStrings;
-import com.glassdoor.planout4j.config.NamespaceConfigBuilder;
 import com.glassdoor.planout4j.config.ValidationException;
-import com.glassdoor.planout4j.util.Helper;
 
 /**
- * Helper/utility class for parsing Planout4j config expressed as either YAML or JSON.
- * This class carries no state and all methods are static.
+ * Interface to parsing Planout4j config expressed as either YAML or JSON.
  * @author ernest.mishkin
  */
-public class Planout4jConfigParser {
-   
-    private static final Logger LOG = LoggerFactory.getLogger(Planout4jConfigParser.class);
+public abstract class Planout4jConfigParser {
+
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /**
-     * @return YAML parser set to automatically compile PlanOut DSL (annotated with <code>!planout</code> tag)
+     * @return String representing parser's source (JSON or YAML)
      */
-    public static Yaml createYamlParser() {
-        return new Yaml(new PlanoutDSLConstructor());
-    }
+    public abstract String getConfigSource();
 
     /**
-     * Parses YAML and returns the raw Map/Lists structure.
-     * {@link com.glassdoor.planout4j.NamespaceConfig} is built behind the scenes which covers the validation.
-     * @param yaml YAML data representing Namespace
-     * @return Map parsed and validated namespace configuration
-     * @throws ValidationException in case of any problem with the configuration
+     * Parses input and constructs NamespaceConfig, performing validation along the way.
+     * @param input source
+     * @param namespace namespace name (optional)
+     * @return NamespaceConfig parsed configuration
+     * @throws ValidationException in case of config errors
      */
-    public static Map<String, ?> parseAndValidateYAML(final Reader yaml) throws ValidationException {
-        final Map<String, Object> config = Helper.cast(createYamlParser().load(yaml));
-        NamespaceConfigBuilder.process(config);
-        return config;
-    }
+    public abstract NamespaceConfig parseAndValidate(final Reader input, String namespace) throws ValidationException;
 
     /**
-     * Parses JSON and returns Namespace configuration.
-     * @param json JSON data representing Namespace
-     * @return NamespaceConfig parsed and validated namespace configuration
-     * @throws ValidationException in case of any problem with the configuration
+     * Parses and validates a collection of namespaces.
+     * @param namespaceConfigsRaw map of namespace name to its unparsed configuration
+     * @return Map of namespace name to parsed NamespaceConfig
+     * @throws ValidationException in case of at least one namespace failed to get parsed
      */
-    public static NamespaceConfig parseAndValidateJSON(final Reader json) throws ValidationException {
-        final Map<String, Object> config = Helper.cast(JSONValue.parse(json));
-        return NamespaceConfigBuilder.process(config);
-    }
-    
-    /**
-     * Parses JSON and returns Namespace configuration for all elements in the collection.
-     * @param namespace2Json namespace2Json a map of namespace names to corresponding json configs
-     * @return a map namespace names to NamespaceConfig objects
-     * @throws ValidationException if any json is not valid
-     */
-    public static Map<String, NamespaceConfig> parseAndValidateJSON(Map<String, String> namespace2Json) throws ValidationException{
-       List<String> invalidNamespaces = new ArrayList<>();
-       Map<String, NamespaceConfig> namespace2ConfigObj = new HashMap<>();
-       for(String namespace : namespace2Json.keySet()){
-          try{
-             namespace2ConfigObj.put(namespace, parseAndValidateJSON(new StringReader(namespace2Json.get(namespace))));
-          }catch(Exception e){
-             LOG.error("Error while parsing and validating json for " + namespace, e);
-             invalidNamespaces.add(namespace);
-          }
-       }
-       
-       if(invalidNamespaces.isEmpty()){
-          return namespace2ConfigObj;
-       }else{
-          throw new ValidationException("Unable to parse and validate namespace jsons for " + invalidNamespaces);
-       }
-    }
-    
-    /**
-     * Inserts namespace name into the yaml 
-     * @param yaml
-     * @param namespaceName
-     * @return
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static String insertNamespaceNameIntoYaml(String yaml, String namespaceName){
-        Yaml yamlParser = createYamlParser();
-        final Map<String, Object> config = Helper.cast(yamlParser.load(yaml));
-        ((Map)config.get(KeyStrings.NAMESPACE)).put(KeyStrings.NAME, namespaceName);
-        return yamlParser.dump(config);
-    }
+    public Map<String, NamespaceConfig> parseAndValidate(final Map<String, String> namespaceConfigsRaw) throws ValidationException {
+        final List<String> invalidNamespaces = new ArrayList<>();
+        final Map<String, NamespaceConfig> namespaceConfigsParsed = new HashMap<>();
+        for (String namespace : namespaceConfigsRaw.keySet()){
+            try {
+                namespaceConfigsParsed.put(namespace,
+                        parseAndValidate(new StringReader(namespaceConfigsRaw.get(namespace)), namespace));
+            } catch (Exception e) {
+                LOG.error("Error while parsing and validating {} for {}", getConfigSource(), namespace, e);
+                invalidNamespaces.add(namespace);
+            }
+        }
 
-    private Planout4jConfigParser() {}
+        if (invalidNamespaces.isEmpty()) {
+            return namespaceConfigsParsed;
+        } else {
+            throw new ValidationException("Unable to parse and validate namespace config " +
+                    getConfigSource() + " for the following namespace: " + invalidNamespaces);
+        }
+
+    }
 
 }

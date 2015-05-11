@@ -2,6 +2,7 @@ package com.glassdoor.planout4j;
 
 import javax.annotation.Resource;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
+import com.glassdoor.planout4j.config.Planout4jTestConfigHelper;
 import com.glassdoor.planout4j.spring.Planout4jAppContext;
 
 import static org.junit.Assert.*;
@@ -17,6 +19,11 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= Planout4jAppContext.class)
 public class Planout4jIntegrationTest {
+
+   @BeforeClass
+   public static void before() {
+      Planout4jTestConfigHelper.setSystemProperties(false);
+   }
 
    public static final String TEST_NAMESPACE_NAME = "ns_test1";
    public static final String BOGUS_NAMESPACE_NAME = "_bogus_";

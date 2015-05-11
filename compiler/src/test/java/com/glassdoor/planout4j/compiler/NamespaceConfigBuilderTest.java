@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableMap;
+
 import com.glassdoor.planout4j.NamespaceConfig;
 import com.glassdoor.planout4j.config.NamespaceConfigBuilder;
 import com.glassdoor.planout4j.config.ValidationException;
@@ -28,6 +30,10 @@ public class NamespaceConfigBuilderTest {
         assertEquals(2, nsConf.getActiveExperimentsCount());
         assertEquals(50, nsConf.getUsedSegments());
         assertNotNull(nsConf.getDefaultExperiment());
+        try {
+            nsConf.defineExperiment("foo", ImmutableMap.of("bar", "baz"));
+            fail("Expected IllegalStateException");
+        } catch (IllegalStateException e) {}
     }
 
     @Test
@@ -44,7 +50,7 @@ public class NamespaceConfigBuilderTest {
 
     private NamespaceConfig loadConfig(String configResource) throws ValidationException {
         System.out.printf("Loading %s\n", configResource);
-        return NamespaceConfigBuilder.process((Map) Planout4jConfigParser.createYamlParser()
+        return NamespaceConfigBuilder.process((Map) YAMLConfigParser.createYamlParser()
                 .load(getClass().getResourceAsStream(configResource)));
     }
 }

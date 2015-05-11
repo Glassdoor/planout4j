@@ -14,7 +14,8 @@ public interface Planout4jRepository {
     /**
      * Invoked by the API at the initial consuming app loading time and at regular refresh intervals.
      * @return Map of namespace name to NamespaceConfig object
+     * @throws ValidationException if at least one namespace config was invalid
      */
-    Map<String, NamespaceConfig> loadAllNamespaceConfigs();
+    Map<String, NamespaceConfig> loadAllNamespaceConfigs() throws ValidationException;
 
 }

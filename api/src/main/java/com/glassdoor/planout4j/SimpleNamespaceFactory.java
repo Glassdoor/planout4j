@@ -9,6 +9,7 @@ import com.google.common.base.Optional;
 
 import com.glassdoor.planout4j.config.Planout4jRepository;
 import com.glassdoor.planout4j.config.Planout4jRepositoryImpl;
+import com.glassdoor.planout4j.config.ValidationException;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -26,7 +27,6 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
     public SimpleNamespaceFactory() {
         planout4jRepository = new Planout4jRepositoryImpl();
         namespaceName2namespaceConfigMap = readConfig();
-        ;
     }
 
     /**
@@ -63,8 +63,13 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
     }
     
     protected final Map<String, NamespaceConfig> readConfig() {
-       LOG.debug("loading namespace data...");
-       return planout4jRepository.loadAllNamespaceConfigs();
+        LOG.debug("loading namespace data...");
+        try {
+            return planout4jRepository.loadAllNamespaceConfigs();
+        } catch (ValidationException e) {
+            LOG.error("Failed to (re)load namespace data, see earlier error messages", e);
+            return namespaceName2namespaceConfigMap;
+        }
     }
 
 }
