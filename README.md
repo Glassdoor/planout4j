@@ -44,6 +44,7 @@ The project is comprised of the following maven modules:
 * `compiler` - this module provide java wrapper for [PlanOut compiler](https://github.com/facebook/planout/tree/master/compiler) as well as tools and API to compile namespace YAML (see above) with embedded PlanOut DSL into JSON.
 * `config` - this module defines API for reading namespace configuration data from / writing to a *backend*. Currently *file system backend* and *Redis backend* (both used internally at Glassdoor) are provided. The module also exposes `Planout4jRepository` interface which acts as a facade to one or more *backends*. It depends on `compiler` for parsing the data.
 * `api` - this is the primary entry point. It provides `NamespaceFactory` interface and several implementations. It depends on `config` for loading up each individual *namespace* and maintains a cache of those keyed by name. This is what majority of developers will likely use.
+* `tools` - this contains all command-line tools. Tools are described in details in the [usage](USAGE.md) document.
 
 ## Maven
 Binary artifacts are hosted at Sonatype repository. The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/)
@@ -63,62 +64,10 @@ Backends come into play in two cases:
 1. `NamespaceFactory` implementation uses [Planout4jConfigRepositoryImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jRepositoryImpl.java) to fetch the namespace configs which have already been compiled to JSON. Redis backend is most appropriate for this purpose
 2. `Planout4jShipperTool` uses [Planout4jShipperImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jShipperImpl.java) to get all namespaces from **source** backend, compile & validate them, and store in **target** backend. File system - to - File system and File system - to - Redis are reasonable examples of the shipper setup.
 
-Please see the default configuration files for [repository](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/resources/planout4j-repository.conf) (runtime consumer use) and [shipper tool](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/resources/planout4j-shipper.conf) to learn about the settings and ways to override them.
+Please see the [default configuration file](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/resources/planout4j.conf) to learn about the settings and ways to override them.
 
-### Running Shipper
-Ship from file system to redis
-`mvn exec:java -Dexec.mainClass=com.glassdoor.planout4j.tools.Planout4jConfigShipperTool -Dplanout4j.backend.target=redis`
-
-## Sample use
-
-#### PlanOut-style programmatically at experiment level
-This is currently not implemented but would be easy to add to the codebase as all the underlying primitives (individual operations) are in place.
-
-__TODO__: Enhance `Interpreter` to recognize when script already represents `PlanOutOp` tree.
-
-#### Programmatically, `core` and `compiler` deps only
-
-```java
-import java.util.Collections;
-import com.glassdoor.planout4j.*;
-import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
-nsConf = new NamespaceConfig("my namespace", 100, "userid", null);
-nsConf.defineExperiment("default", "itemsToShow = uniformChoice(choices=[5, 10, 20], unit=userid);");
-nsConf.setDefaultExperiment("default");
-Namespace ns = new Namespace(nsConf, Collections.singletonMap("userid", 123), null);
-int itemsToShow = ns.getParam("itemsToShow", 10);
-```
-
-#### Using YAML namespace configuration (no sringframework)
-
-Let's assume there's `test-ns.yaml` file with the content as above (top of the document). We can compile it to JSON by executing compiler tool:
-`mvn exec:java -Dexec.mainClass=Planout4jCompilerTool -Dtool=compilePlanout4jConfig -Dinput=test-ns.yaml -Doutput=test-ns.json`
-This will produce `test-ns.json` which can be consumed by the code below.
-
-The code (specifically, `Planout4jRepositoryImpl`) will use `planout4j-config.conf` file to determine which *backend* to use as well as to set the backend's properties. All the properties can be overridden.
-
-__TODO__: Allow user-provided config file.
-
-```java
-// obviously this is crude; in reality one would pass the property override
-// using command-line option (-D)
-// the configuration mechanism is currently quite raw, will be revisited
-System.setProperty("file.
-NamespaceFactory nsFact = new SimpleNamespaceFactory();
-Namespace ns = nsFact.getNamespace("test-ns", Collections.singletonMap("userid", 123).get();
-String buttonText = ns.getParam("button_text", "default");
-```
-
-#### Using YAML namespace configuration (with sringframework)
-
-```java
-@ContextConfiguration(classes = Planout4jAppContext.class)
-public class MyClass {
-    @Resource
-    private NamespaceFactory nsFact;
-    // use nsFact as in the above example
-}
-```
+## Using PlanOut4J
+Please see detailed instructions [here](USAGE.md)
 
 ## PlanOut4J at Glassdoor
 
