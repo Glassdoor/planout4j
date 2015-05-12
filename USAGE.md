@@ -72,7 +72,10 @@ The `tools` module produces "uber-jar" named `planout4j-tools-${version}.jar`. T
 `java -jar planout4j-tools-${version}.jar --help` will list the tools available as well as general options. `planout4j-tools-${version}.jar tool --help` will provide detailed help for the tool `tool`. The following tools are currently available:
 
 * compile
-	- compiles PlanOut DSL (if input is file *not* ending in  `.yaml`,  `.yml`,  or  `.p4j`  as  well  as when input is not a file) or PlanOut4J namespace config YAML with embedded PlanOut DSL (in all other cases) to JSON representation
+	- compiles PlanOut DSL or PlanOut4J namespace config YAML with embedded PlanOut DSL (in all other cases) to JSON representation
+	- if the unit of compilation is not a file (explicitly provided snippet) assume it is PlanOut DSL code
+	- if the file to be compiled has one of the following extensions - `.yaml`,  `.yml`,  or  `.p4j`  assume it is PlanOut4J namespace config
+	- if the file has any other extension, assume PlanOut DSL 
 * ship
    - compiles all namespace config YAML files in the source backend to JSON and stores results in the target backend
 * nslist
@@ -100,7 +103,7 @@ Namespace ns = new Namespace(nsConf, Collections.singletonMap("userid", 123), nu
 int itemsToShow = ns.getParam("itemsToShow", 10);
 ```
 
-#### Using YAML namespace configuration (no sringframework)
+#### Using YAML namespace configuration (no SpringFramework)
 
 Let's assume there's `test-ns.yaml` file with the content as above (top of the document). We can compile it to JSON by executing compiler tool:
 `mvn exec:java -Dexec.mainClass=Planout4jCompilerTool -Dtool=compilePlanout4jConfig -Dinput=test-ns.yaml -Doutput=test-ns.json`
@@ -114,13 +117,12 @@ __TODO__: Allow user-provided config file.
 // obviously this is crude; in reality one would pass the property override
 // using command-line option (-D)
 // the configuration mechanism is currently quite raw, will be revisited
-System.setProperty("file.
 NamespaceFactory nsFact = new SimpleNamespaceFactory();
 Namespace ns = nsFact.getNamespace("test-ns", Collections.singletonMap("userid", 123).get();
 String buttonText = ns.getParam("button_text", "default");
 ```
 
-#### Using YAML namespace configuration (with sringframework)
+#### Using YAML namespace configuration (with SpringFramework)
 
 ```java
 @ContextConfiguration(classes = Planout4jAppContext.class)
