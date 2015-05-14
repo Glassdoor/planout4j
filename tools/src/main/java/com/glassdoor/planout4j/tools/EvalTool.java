@@ -7,7 +7,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -26,6 +29,19 @@ import com.glassdoor.planout4j.util.Helper;
 public class EvalTool {
 
     private static final Logger LOG = LoggerFactory.getLogger(EvalTool.class);
+
+    public static void configureArgsParser(final Subparsers subparsers) {
+        final Subparser eval = subparsers.addParser("eval").help("evaluates namespace, experiment, or code snippet");
+        eval.addArgument("--target-backend").help("specify target backend, e.g. redis or compiled_files (it must be defined in config file)");
+        eval.addArgument("-d", "--dest-dir").help("destination directory for the file backend");
+        final MutuallyExclusiveGroup nameOrScript = eval.addMutuallyExclusiveGroup("evaluation object");
+        nameOrScript.addArgument("-n", "--name").help("namespace name");
+        final MutuallyExclusiveGroup experimentOrDefinition = eval.addMutuallyExclusiveGroup("additional selectors within namespace");
+        experimentOrDefinition.addArgument("--exp").help("experiment name (requires --name NAME)");
+        experimentOrDefinition.addArgument("--def").help("experiment definition key (requires --name NAME)");
+        nameOrScript.addArgument("--script").help("planout DSL script");
+        eval.addArgument("input").nargs("+").help("input parameters in the form of KEY=VALUE");
+    }
 
     public static void execute(final Namespace parsedArgs) throws IOException, ValidationException {
         final Map<String, Object> inputMap = new HashMap<>();

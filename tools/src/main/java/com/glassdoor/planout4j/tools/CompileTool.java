@@ -4,7 +4,10 @@ import java.io.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import com.google.common.io.CharStreams;
 
 import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
@@ -18,6 +21,15 @@ import com.glassdoor.planout4j.config.ValidationException;
 public class CompileTool {
    
     private static final Logger LOG = LoggerFactory.getLogger(CompileTool.class);
+
+    public static void configureArgsParser(final Subparsers subparsers) {
+        final Subparser compile = subparsers.addParser("compile")
+                .help("compiles PlanOut DSL (if input is file *not* ending in '.yaml', '.yml', or '.p4j' as well as when input is not a file) " +
+                        "or PlanOut4J namespace config YAML with embedded PlanOut DSL (in all other cases) to JSON representation");
+        compile.addArgument("input").help("either input file path or in-line DSL code");
+        compile.addArgument("output").nargs("?").help("output file path (print to standard out if not specified)");
+        compile.addArgument("--no-pretty").dest("pretty").action(Arguments.storeFalse()).help("do NOT pretty-print JSON");
+    }
 
     public static void execute(final Namespace parsedArgs) throws IOException, ValidationException {
         final String input = parsedArgs.getString("input"), lcInput = input.toLowerCase();
