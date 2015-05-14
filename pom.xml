@@ -67,6 +67,7 @@
         <maven-source.version>2.4</maven-source.version>
         <maven-javadoc.version>2.10.3</maven-javadoc.version>
         <maven-shade.version>2.3</maven-shade.version>
+        <maven-gpg.version>1.5</maven-gpg.version>
         <maven-release.version>2.5.2</maven-release.version>
         <sonatype-plugin.version>1.6.5</sonatype-plugin.version>
         <slf4j.version>1.7.12</slf4j.version>
@@ -144,6 +145,21 @@
                                 <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
                                 </goals>
                             </execution>
                         </executions>
