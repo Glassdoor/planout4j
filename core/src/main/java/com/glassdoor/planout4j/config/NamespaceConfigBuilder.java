@@ -51,6 +51,7 @@ public class NamespaceConfigBuilder {
                     get(ns, SEGMENTS, Integer.class, ctx),
                     get(ns, UNIT, String.class, ctx),
                     (salt == null ? null : salt.toString()));
+            nsConf.setConfig(config);
 
             final List<Map<String, Object>> expDefs = cast(get(config, EXPERIMENT_DEFINITIONS, List.class, ctx));
             ctx.push(EXPERIMENT_DEFINITIONS);
@@ -92,6 +93,7 @@ public class NamespaceConfigBuilder {
                         nsConf.name, nsConf.getActiveExperimentsCount(), nsConf.getExperimentDefsCount(),
                         nsConf.getUsedSegments(), nsConf.getTotalSegments());
             }
+            nsConf.noMoreChanges();
             return nsConf;
 
         } catch (IllegalArgumentException e) {

@@ -5,10 +5,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 
 import com.glassdoor.planout4j.NamespaceConfig;
-import com.glassdoor.planout4j.compiler.Planout4jConfigParser;
+import com.glassdoor.planout4j.compiler.JSONConfigParser;
 
 
 public class Planout4jRepositoryImpl implements Planout4jRepository {
@@ -18,22 +17,19 @@ public class Planout4jRepositoryImpl implements Planout4jRepository {
    private Planout4jConfigBackend configBackend;
 
    public Planout4jRepositoryImpl() {
-      final Config config = ConfigFactory.load("planout4j-repository").getConfig("planout4j").getConfig("backend");
-      configBackend = Planout4jConfigBackendFactory.createAndConfigure(config, config.getString("source"));
+      final Config config = ConfFileLoader.loadConfig().getConfig("planout4j").getConfig("backend");
+      configBackend = Planout4jConfigBackendFactory.createAndConfigure(config, config.getString("target"));
       LOG.info("Using {} as the backend", configBackend.persistenceDestination());
    }
 
    @Override
-   public Map<String, NamespaceConfig> loadAllNamespaceConfigs() {
-      Map<String, String> namespace2Config = configBackend.loadAll();
+   public Map<String, NamespaceConfig> loadAllNamespaceConfigs() throws ValidationException {
+      final Map<String, String> namespace2Config = configBackend.loadAll();
+      LOG.info("Loaded {} planout4j namespace config(s) from {}", namespace2Config.size(), configBackend.persistenceDestination());
       if (LOG.isTraceEnabled()) {
-         LOG.trace("Loaded planout4j config from {}: {}", configBackend.persistenceLayer(), namespace2Config);
+         LOG.trace("Loaded planout4j namespace config(s) from {}:\n{}", configBackend.persistenceDestination(), namespace2Config);
       }
-      try {
-         return Planout4jConfigParser.parseAndValidateJSON(namespace2Config);
-      } catch (ValidationException e) {
-         throw new RuntimeException("Unable to load all namespace configs", e);
-      }
+      return new JSONConfigParser().parseAndValidate(namespace2Config);
    }
 
 }

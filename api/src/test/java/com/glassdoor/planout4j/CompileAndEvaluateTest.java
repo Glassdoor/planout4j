@@ -3,11 +3,13 @@ package com.glassdoor.planout4j;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
+import com.glassdoor.planout4j.config.Planout4jTestConfigHelper;
 import com.glassdoor.planout4j.planout.Interpreter;
 import com.glassdoor.planout4j.util.Helper;
 
@@ -20,6 +22,11 @@ import static org.junit.Assert.*;
  */
 @SuppressWarnings("all")
 public class CompileAndEvaluateTest {
+
+    @BeforeClass
+    public static void before() {
+        Planout4jTestConfigHelper.setSystemProperties(false);
+    }
 
     @Test
     public void testCanUseImmutableCompilerOutput() throws Exception {

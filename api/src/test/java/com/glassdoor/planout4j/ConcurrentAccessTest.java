@@ -11,7 +11,10 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.math.random.JDKRandomGenerator;
 import org.apache.commons.math.random.RandomData;
 import org.apache.commons.math.random.RandomDataImpl;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,6 +24,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.SetMultimap;
 
+import com.glassdoor.planout4j.config.Planout4jTestConfigHelper;
 import com.glassdoor.planout4j.spring.Planout4jAppContext;
 
 import static org.junit.Assert.*;
@@ -29,6 +33,11 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Planout4jAppContext.class)
 public class ConcurrentAccessTest {
+
+    @BeforeClass
+    public static void before() {
+        Planout4jTestConfigHelper.setSystemProperties(false);
+    }
 
     @Resource
     private NamespaceFactory namespaceFactory;
@@ -53,6 +62,8 @@ public class ConcurrentAccessTest {
         final Map<String, MutableInt> experimentFreq = new TreeMap<>();
         final List<String> guids = generateUserGUIDs(random, totalUsers, totalFirstParts);
         System.out.printf("*** Generated %s GUIDs with %s unique first parts\n", totalUsers, totalFirstParts);
+        // log4j.properties is configured for DEBUG which will spit out too many messages in this case
+        Logger.getLogger("com.glassdoor").setLevel(Level.INFO);
 
         // main loop
         final Stopwatch stopwatch = Stopwatch.createStarted();
@@ -83,6 +94,7 @@ public class ConcurrentAccessTest {
         }
 
         // verify and report
+        Logger.getLogger("com.glassdoor").setLevel(Level.DEBUG);
         System.out.printf("*** Completed %s iterations using %s threads in %s\n", requestsCnt, threadsCnt, stopwatch.stop());
         boolean foundOscillators = false;
         for (String userGuid : resultsByUser.asMap().keySet()) {

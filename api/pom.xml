@@ -47,6 +47,14 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.glassdoor.planout4j</groupId>
+            <artifactId>planout4j-config</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

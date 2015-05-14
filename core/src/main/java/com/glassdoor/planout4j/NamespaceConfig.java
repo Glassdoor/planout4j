@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
+
 import com.glassdoor.planout4j.planout.ops.random.RandomInteger;
 import com.glassdoor.planout4j.planout.ops.random.Sample;
 
@@ -29,6 +31,8 @@ public class NamespaceConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private Map<String, ?> config;
+
     public final String name;
     public final String unit;
     public final String salt;
@@ -40,6 +44,8 @@ public class NamespaceConfig {
     private final Experiment[] allocationMap;
 
     private Experiment defaultExperiment;
+
+    private boolean noMoreChanges;
 
 
     /**
@@ -72,6 +78,7 @@ public class NamespaceConfig {
      * @param assign the assignment script (e.g. compiled PlanOut DSL or Darwin JSON)
      */
     public void defineExperiment(final String definition, final Map<String, ?> assign) {
+        verifyChangesAllowed();
         final ExperimentConfig expDef = new ExperimentConfig(definition, assign);
         final ExperimentConfig existingDef = allExpDefs.put(definition, expDef);
         checkArgument(existingDef == null, "duplicated experiment definition %s", expDef);
@@ -84,6 +91,7 @@ public class NamespaceConfig {
      * @param segments number of segments to allocate, must be no more than remaining available
      */
     public void addExperiment(final String expName, final String definition, final int segments) {
+        verifyChangesAllowed();
         final ExperimentConfig expDef = allExpDefs.get(definition);
         checkArgument(expDef != null, "reference to undefined experiment %s", definition);
         final Collection<Integer> usedSegments = allocateSegments(segments, expName);
@@ -101,6 +109,7 @@ public class NamespaceConfig {
      * @param expName experiment name
      */
     public void removeExperiment(final String expName) {
+        verifyChangesAllowed();
         final Experiment exp = activeExperiments.remove(expName);
         checkArgument(exp != null, "No active experiment named %s", expName);
         availableSegments.addAll(exp.usedSegments);
@@ -118,6 +127,7 @@ public class NamespaceConfig {
      * @param definition the definition key
      */
     public void setDefaultExperiment(final String definition) {
+        verifyChangesAllowed();
         final ExperimentConfig expDef = allExpDefs.get(definition);
         checkArgument(expDef != null, "reference to undefined experiment %s", definition);
         final String expSalt = format("%s.%s", StringUtils.defaultString(salt, this.name), definition);
@@ -141,6 +151,13 @@ public class NamespaceConfig {
     }
 
     /**
+     * @return names of all experiment configs (aka definitions)
+     */
+    public Collection<String> getExperimentConfigNames() {
+        return allExpDefs.keySet();
+    }
+
+    /**
      * @return number of active experiment instances
      */
     public int getActiveExperimentsCount() {
@@ -154,6 +171,13 @@ public class NamespaceConfig {
      */
     public Experiment getActiveExperiment(final String name) {
         return activeExperiments.get(name);
+    }
+
+    /**
+     * @return names of all active experiments
+     */
+    public Collection<String> getActiveExperimentNames() {
+        return activeExperiments.keySet();
     }
 
     /**
@@ -220,6 +244,32 @@ public class NamespaceConfig {
         final List<Integer> usedSegments = new Sample<>(new ArrayList<>(availableSegments), segments, expName).eval();
         availableSegments.removeAll(usedSegments);
         return usedSegments;
+    }
+
+
+    public Map<String, ?> getConfig() {
+        return config;
+    }
+
+    public void setConfig(final Map<String, ?> config) {
+        verifyChangesAllowed();
+        this.config = Collections.unmodifiableMap(config);
+    }
+
+    private void verifyChangesAllowed() {
+        checkState(!noMoreChanges, "No more changes to this object!");
+    }
+
+    public void noMoreChanges() {
+        verifyChangesAllowed();
+        noMoreChanges = true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("name", name).add("total segments", getTotalSegments())
+                .add("used segments", getUsedSegments()).add("definitions", getExperimentDefsCount())
+                .add("active experiments", getActiveExperimentsCount()).toString();
     }
 
 }

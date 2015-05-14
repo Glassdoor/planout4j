@@ -28,7 +28,8 @@ public class Namespace {
      */
     public static final String BASELINE_KEY = "_baseline_";
 
-    private final NamespaceConfig nsConf;
+    // at this point NamespaceConfig is immutable, so it's safe to expose it
+    public final NamespaceConfig nsConf;
 
     private Experiment experiment;
 
