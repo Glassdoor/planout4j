@@ -67,6 +67,7 @@
         <maven-source.version>2.4</maven-source.version>
         <maven-javadoc.version>2.10.3</maven-javadoc.version>
         <maven-shade.version>2.3</maven-shade.version>
+        <maven-release.version>2.5.2</maven-release.version>
         <sonatype-plugin.version>1.6.5</sonatype-plugin.version>
         <slf4j.version>1.7.12</slf4j.version>
         <log4j12.version>1.2.17</log4j12.version>
@@ -111,6 +112,18 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release.version}</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
                 </configuration>
             </plugin>
         </plugins>
