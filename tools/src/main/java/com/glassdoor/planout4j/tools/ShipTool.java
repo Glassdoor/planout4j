@@ -25,9 +25,7 @@ public class ShipTool {
         final Subparser ship = subparsers.addParser("ship")
                 .help("compiles all namespace config YAML files in the source backend to JSON and stores results in the target backend");
         ship.addArgument("--dry-run").action(Arguments.storeTrue()).help("do not modify target backend (validate source configs only)");
-        ship.addArgument("--target-backend").help("specify target backend, e.g. redis or compiled_files (it must be defined in config file)");
-        ship.addArgument("-s", "--source-dir").help("source directory for the file backend");
-        ship.addArgument("-d", "--dest-dir").help("destination directory for the file backend");
+        Planout4jTool.addBackendArgs(ship, true);
     }
 
     public static void execute(final Namespace parsedArgs) throws IOException, ValidationException {

@@ -29,12 +29,13 @@ public class ConfFileLoader {
             final File configFile = new File(customConfigPath);
             if (configFile.isFile() && configFile.canRead()) {
                 log.info("Using custom config: {}", configFile.getAbsolutePath());
-                return ConfigFactory.parseFile(configFile).withFallback(internalConfig).resolve();
+                return ConfigFactory.defaultOverrides().withFallback(
+                        ConfigFactory.parseFile(configFile).withFallback(internalConfig)).resolve();
             } else {
                 log.warn("Invalid custom config path: {} (resolves to {})", customConfigPath, configFile.getAbsolutePath());
             }
         }
-        log.info("Using embdded default config");
+        log.info("Using embedded default config");
         return internalConfig;
     }
 

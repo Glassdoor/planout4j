@@ -32,8 +32,7 @@ public class EvalTool {
 
     public static void configureArgsParser(final Subparsers subparsers) {
         final Subparser eval = subparsers.addParser("eval").help("evaluates namespace, experiment, or code snippet");
-        eval.addArgument("--target-backend").help("specify target backend, e.g. redis or compiled_files (it must be defined in config file)");
-        eval.addArgument("-d", "--dest-dir").help("destination directory for the file backend");
+        Planout4jTool.addBackendArgs(eval, false);
         final MutuallyExclusiveGroup nameOrScript = eval.addMutuallyExclusiveGroup("evaluation object");
         nameOrScript.addArgument("-n", "--name").help("namespace name");
         final MutuallyExclusiveGroup experimentOrDefinition = eval.addMutuallyExclusiveGroup("additional selectors within namespace");

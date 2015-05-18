@@ -59,11 +59,14 @@ public class Planout4jTool {
     }
 
 
-    private static final Map<String, String> ARG2SYSPROP = ImmutableMap.of(
-            "config_file", "planout4jConfigFile",
-            "target_backend", "planout4j.backend.target",
-            "source_dir", "planout4j.backend.sourceConfDir",
-            "dest_dir", "planout4j.backend.compiledConfDir");
+    private static final Map<String, String> ARG2SYSPROP = new ImmutableMap.Builder<String, String>()
+            .put("config_file",    "planout4jConfigFile")
+            .put("target_backend", "planout4j.backend.target")
+            .put("source_dir",     "planout4j.backend.sourceConfDir")
+            .put("dest_dir",       "planout4j.backend.compiledConfDir")
+            .put("redis_host",     "planout4j.backend.redis.host")
+            .put("redis_key",      "planout4j.backend.redis.key")
+            .build();
 
     static void setSystemProperties(final Namespace parsedArgs) {
         for (String argName : ARG2SYSPROP.keySet()) {
@@ -72,6 +75,16 @@ public class Planout4jTool {
                 System.setProperty(ARG2SYSPROP.get(argName), value);
             }
         }
+    }
+
+    static void addBackendArgs(final ArgumentParser parser, final boolean includeSource) {
+        parser.addArgument("--target-backend").help("specify target backend, e.g. redis or compiled_files (it must be defined in config file)");
+        if (includeSource) {
+            parser.addArgument("-s", "--source-dir").help("source directory for the file backend");
+        }
+        parser.addArgument("-d", "--dest-dir").help("destination directory for the file backend");
+        parser.addArgument("--redis-host").help("redis host to use with redis backend");
+        parser.addArgument("--redis-key").help("redis key to use with redis backend");
     }
 
     static Gson getGson(final Namespace parsedArgs) {
