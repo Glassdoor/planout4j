@@ -22,14 +22,14 @@ public class ConfFileLoader {
      * @return Planout4j configuration (backends, etc.)
      */
     public static Config loadConfig() {
-        final Config internalConfig = ConfigFactory.load("planout4j");
+        final Config internalConfig = ConfigFactory.load("planout4j").resolve();
         final String customConfigPath = System.getProperty("planout4jConfigFile");
         final Logger log = LoggerFactory.getLogger(ConfFileLoader.class);
         if (customConfigPath != null) {
             final File configFile = new File(customConfigPath);
             if (configFile.isFile() && configFile.canRead()) {
                 log.info("Using custom config: {}", configFile.getAbsolutePath());
-                return ConfigFactory.parseFile(configFile).withFallback(internalConfig);
+                return ConfigFactory.parseFile(configFile).withFallback(internalConfig).resolve();
             } else {
                 log.warn("Invalid custom config path: {} (resolves to {})", customConfigPath, configFile.getAbsolutePath());
             }
