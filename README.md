@@ -47,9 +47,19 @@ The project is comprised of the following maven modules:
 * `tools` - this contains all command-line tools. Tools are described in details in the [usage](USAGE.md) document.
 
 ## Maven
-Binary artifacts are hosted at Sonatype repository. The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/)
+Binary artifacts are hosted at Sonatype (OSSRH) repository and releases are propagated to Maven Central.
+Too use PlanOut4J in a project, add the [latest version of planout4j-api](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22planout4j-api%22)
+to the dependencies in `pom.xml`, for ex.:
 
-The releases will be pushed to maven central.
+ ```xml
+ <dependency>
+     <groupId>com.glassdoor.planout4j</groupId>
+     <artifactId>planout4j-api</artifactId>
+     <version>1.0</version>
+ </dependency>
+ ```
+ 
+The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/planout4j-api)
 
 ## Backends
 Backend is an abstraction used to access (read/write) namespace configuration data without concern of the underlying storage mechanism.
