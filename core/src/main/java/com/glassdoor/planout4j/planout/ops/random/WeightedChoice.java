@@ -1,9 +1,9 @@
 package com.glassdoor.planout4j.planout.ops.random;
 
-import com.glassdoor.planout4j.util.Helper;
-
 import java.util.List;
 import java.util.Map;
+
+import com.glassdoor.planout4j.util.Helper;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -14,6 +14,12 @@ public class WeightedChoice<T> extends PlanOutOpRandom<T> {
 
     public WeightedChoice(final Map<String, Object> args) {
         super(args);
+    }
+
+    public WeightedChoice(final List<T> choices, final List<? extends Number> weights, final Object unit) {
+        super(unit);
+        args.put("choices", choices);
+        args.put("weights", weights);
     }
 
     @Override
