@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/Glassdoor/planout4j.svg?branch=master)](https://travis-ci.org/Glassdoor/planout4j)
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.glassdoor.planout4j/planout4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.glassdoor.planout4j/planout4j-core)
+
 # PlanOut4J
 
 PlanOut4J is a Java-based implementation of Facebook's [PlanOut], an A/B testing framework designed to conduct experiments on the web at scale.
