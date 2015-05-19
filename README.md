@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.org/Glassdoor/planout4j.svg?branch=master)](https://travis-ci.org/Glassdoor/planout4j)
+
 # PlanOut4J
 
-PlanOut4J is a Java-based implementation of Facebook's [PlanOut], an A/B testing framework designed to conduct experiments on the web at scale. 
+PlanOut4J is a Java-based implementation of Facebook's [PlanOut], an A/B testing framework designed to conduct experiments on the web at scale.
 PlanOut4J makes it easy to express, deploy and maintain sophisticated randomized experiments and to quickly iterate on these experiments, while satisfying the constraints of large-scale Internet services with many users.
 
 [PlanOut]: http://facebook.github.io/planout/
@@ -8,7 +10,7 @@ PlanOut4J makes it easy to express, deploy and maintain sophisticated randomized
 PlanOut4J's emphasis is to enable persons who don't necessarily have comprehensive engineering background create and maintain experiments easily. To that extent, we utilize [PlanOut DSL](http://facebook.github.io/planout/docs/planout-language-reference.html) wrapped into an intuitive YAML format. Here is a simple config file describing a trivial *namespace* (more about namespaces below)
 
 ```yaml
-namespace: 
+namespace:
   unit: userid
   segments: 100
 
@@ -31,7 +33,7 @@ experiment_sequence:
     segments: 40
 ```
 
-What's going on here? 
+What's going on here?
 
 Firstly, we need a [namespace](https://facebook.github.io/planout/docs/namespaces.html). One might think of namespaces are containers used to run multiple experiments concurrently without stepping on each others' toes where such interference is undesirable. For a particular user, only a single experiment in a given namespace can be active at any given point in time. However, the same user can participate in multiple experiments from different namespaces. We put experiments that manipulate closely related parameters into the same namespace, thus avoiding something like presenting a user with white text on white background. If we save the above YAML in a file `test.yaml` we have `test` namespace.
 
@@ -58,7 +60,7 @@ to the dependencies in `pom.xml`, for ex.:
      <version>1.0</version>
  </dependency>
  ```
- 
+
 The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/planout4j-api)
 
 ## Backends
