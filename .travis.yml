@@ -1,9 +1,13 @@
 language: java
+
 jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+  - openjdk6
+
 matrix:
   fast_finish: true
   allow_failures:
     - jdk: oraclejdk8
+    - jdk: openjdk6
