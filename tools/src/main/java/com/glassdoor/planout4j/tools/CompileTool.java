@@ -50,7 +50,7 @@ public class CompileTool {
         final String namespace = yaml ? com.google.common.io.Files.getNameWithoutExtension(input) : null;
         try (final Writer writer = output != null ? new FileWriter(output) : new OutputStreamWriter(System.out)) {
             writer.write(Planout4jTool.getGson(parsedArgs).toJson(yaml ?
-                    new YAMLConfigParser().parseAndValidate(reader, namespace) :
+                    new YAMLConfigParser().parseAndValidate(reader, namespace).getConfig() :
                     PlanoutDSLCompiler.dsl_to_json(CharStreams.toString(reader))));
         }
     }

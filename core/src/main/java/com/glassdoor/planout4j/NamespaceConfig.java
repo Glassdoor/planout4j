@@ -63,7 +63,7 @@ public class NamespaceConfig {
         checkArgument(StringUtils.isNotEmpty(unit));
         this.unit = unit;
         checkArgument(totalSegments > 0, "totalSegments must be a positive integer");
-        availableSegments = new HashSet<>(totalSegments, 1);
+        availableSegments = new LinkedHashSet<>(totalSegments, 1);
         for (int i=0; i < totalSegments; i++) {
             availableSegments.add(i);
         }

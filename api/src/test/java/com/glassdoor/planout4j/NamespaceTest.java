@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 @SuppressWarnings("ALL")
 public class NamespaceTest {
 
-    private final int Speed_NR_Ph1_user = 98;
+    private final int Speed_NR_Ph1_user = 108;
     private final int Speed_NR_Ph2_user = 12345;
 
     @Test
@@ -46,9 +46,9 @@ public class NamespaceTest {
             new Namespace(nsConf, ImmutableMap.of("foo", 0), null);
             fail("Expected an error");
         } catch (RuntimeException e) {}
-        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 1l, "useParallelSegmentSearch", true, "use_pclick", true),
+        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 15l, "useParallelSegmentSearch", true, "use_pclick", true),
                 ImmutableMap.copyOf(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParams()));
-        assertEquals(1, new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("srJobsResultsPerPage", -1));
+        assertEquals(15, new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("srJobsResultsPerPage", -1));
         assertEquals(-1, new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("foo", -1));
         assertTrue(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("use_pclick", false));
         // freezing one of the computed params

@@ -187,4 +187,20 @@ public class RandomOpsTest {
                 ImmutableMap.of("a", 2, "b", 1));
     }
 
+
+    @Test
+    public void testDistributionsConsistency() {
+        String fullSalt = "some long value";
+        for (int i=0; i < 6; i++) {
+            String unit = UUID.randomUUID().toString();
+            WeightedChoice<Integer> weightedChoice = new WeightedChoice<>(ImmutableList.of(10, 20), ImmutableList.of(0.25, 0.75), unit);
+            weightedChoice.setFullSalt(fullSalt);
+            int choice = weightedChoice.eval();
+            WeightedChoice<Integer> weightedChoice2 = new WeightedChoice<>(ImmutableList.of(1, 2, 3, 4), ImmutableList.of(0.25, 0.25, 0.25, 0.25), unit);
+            weightedChoice2.setFullSalt(fullSalt);
+            int choice2 = weightedChoice2.eval();
+            assertTrue(choice == 10 && choice2 == 1 || choice == 20 && choice2 > 1);
+        }
+    }
+
 }
