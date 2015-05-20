@@ -27,7 +27,7 @@ public class ExperimentConfig {
     }
 
     public final Map<String, ?> getCopyOfScript() {
-        return Helper.deepCopy(script);
+        return Helper.deepCopy(script, null);
     }
 
     @Override

@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.apache.commons.collections4.ComparatorUtils;
 
+import com.google.common.base.MoreObjects;
+
 import com.glassdoor.planout4j.planout.ops.utils.MixedNumbersComparator;
 
 import static com.google.common.base.Preconditions.*;
@@ -91,7 +93,7 @@ public class Helper {
      * @param values List of values
      * @param caller the calling Class (for better context in error reporting)
      * @return either {@link com.glassdoor.planout4j.planout.ops.utils.MixedNumbersComparator} or
-     *         {@link org.apache.commons.collections.ComparatorUtils#NATURAL_COMPARATOR}
+     *         {@link org.apache.commons.collections4.ComparatorUtils#NATURAL_COMPARATOR}
      */
     @SuppressWarnings("unchecked")
     public static Comparator<Object> getComparator(final List<Object> values, final Class caller) {
@@ -115,30 +117,31 @@ public class Helper {
      * @param script the "tree" to copy
      * @return Map representing the newly created copy
      */
-    public static Map<String, ?> deepCopy(final Map<String, ?> script) {
+    public static Map<String, ?> deepCopy(final Map<String, ?> script, final CollectionDetector collectionDetector) {
         // the copy can possibly grow by 1 entry due to "salt" key being added,
         // hence the small optimization with capacity and load factor
         final Map<String, Object> copy = new LinkedHashMap<>(script.size()+1, 1);
+        final CollectionDetector notNullCollectionDetector = MoreObjects.firstNonNull(collectionDetector, CollectionDetector.DEFAULT);
         for (String key : script.keySet()) {
-            copy.put(key, copyIfNecessary(script.get(key)));
+            copy.put(key, copyIfNecessary(script.get(key), notNullCollectionDetector));
         }
         return copy;
     }
 
-    private static List<?> deepCopy(final List<?> list) {
+    private static List<?> deepCopy(final Collection<?> list, final CollectionDetector collectionDetector) {
         final List<Object> copy = new ArrayList<>(list.size());
         for (Object val : list) {
-            copy.add(copyIfNecessary(val));
+            copy.add(copyIfNecessary(val, collectionDetector));
         }
         return copy;
     }
 
     @SuppressWarnings("unchecked")
-    private static Object copyIfNecessary(final Object val) {
-        if (val instanceof Map) {
-            return deepCopy((Map<String, ?>)val);
-        } else if (val instanceof List) {
-            return deepCopy((List<?>)val);
+    private static Object copyIfNecessary(final Object val,final CollectionDetector collectionDetector) {
+        if (collectionDetector.isCollection(val)) {
+            return deepCopy(collectionDetector.extractCollection(val), collectionDetector);
+        } else if (val instanceof Map) {
+            return deepCopy((Map<String, ?>)val, collectionDetector);
         } else {
             return val;
         }

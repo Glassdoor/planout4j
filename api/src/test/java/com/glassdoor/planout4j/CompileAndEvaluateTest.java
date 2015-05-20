@@ -30,16 +30,16 @@ public class CompileAndEvaluateTest {
 
     @Test
     public void testCanUseImmutableCompilerOutput() throws Exception {
-        Map<String, ?> code = Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json("x = 2;"));
+        Map<String, ?> code = Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json("x = 2;"), null);
         assertEquals(ImmutableMap.of("x", 2.0), new Interpreter(code, "salt", Collections.EMPTY_MAP, Collections.EMPTY_MAP).getParams());
-        code = Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json("x = [1,2];"));
+        code = Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json("x = [1,2];"), null);
         assertEquals(ImmutableMap.of("x", ImmutableList.of(1.0, 2.0)), new Interpreter(code, "salt", Collections.EMPTY_MAP, Collections.EMPTY_MAP).getParams());
     }
 
     @Test
     public void specialValuesTest() throws Exception {
         Map<String, ?> code = Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json(
-                "x = \"\"; y = uniformChoice(choices=[\"\"], unit=userid);"));
+                "x = \"\"; y = uniformChoice(choices=[\"\"], unit=userid);"), null);
         assertEquals(ImmutableMap.of("x", "", "y", ""),
                 new Interpreter(code, "salt", ImmutableMap.<String, Object>of("userid", ""), Collections.EMPTY_MAP).getParams());
     }

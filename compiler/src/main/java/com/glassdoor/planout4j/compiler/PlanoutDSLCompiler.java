@@ -50,7 +50,7 @@ public class PlanoutDSLCompiler {
             final Object json = engine.get("output");
             checkState(json instanceof Map, "Expected compiled object to be an instance of Map, but it is %s",
                     Helper.getClassName(json));
-            return (Map<String, ?>)json;
+            return Helper.deepCopy((Map<String, ?>)json, JSCollectionDetector.get());
         } catch (Exception e) {
             throw new ValidationException("Failed to compile DSL:\n" + dsl, e);
         }

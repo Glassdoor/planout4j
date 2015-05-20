@@ -104,7 +104,7 @@ public class EvalTool {
                                                     final Map<String, Object> inputMap)
     {
         try {
-            return new Interpreter(Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json(script)),
+            return new Interpreter(Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json(script), null),
                     parsedArgs.getString("salt"), inputMap, null).getParams();
         } catch (ValidationException e) {
             LOG.error("Failed to compile script\n{}\n", e);
