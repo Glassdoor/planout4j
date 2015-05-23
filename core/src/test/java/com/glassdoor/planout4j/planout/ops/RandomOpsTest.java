@@ -200,6 +200,15 @@ public class RandomOpsTest {
             weightedChoice2.setFullSalt(fullSalt);
             int choice2 = weightedChoice2.eval();
             assertTrue(choice == 10 && choice2 == 1 || choice == 20 && choice2 > 1);
+
+            UniformChoice<List> uniformChoice = new UniformChoice<List>(ImmutableList.<List>of(
+                    ImmutableList.of(1, 2, 3), ImmutableList.of(10, 20)), unit);
+            uniformChoice.setFullSalt(fullSalt);
+            List uchoice = uniformChoice.eval();
+            UniformChoice<Boolean> uniformChoice2 = new UniformChoice<Boolean>(ImmutableList.of(false, true), unit);
+            uniformChoice2.setFullSalt(fullSalt);
+            Boolean uchoice2 = uniformChoice2.eval();
+            assertTrue(uchoice.size() == 3 && !uchoice2 || uchoice.size() == 2 && uchoice2);
         }
     }
 
