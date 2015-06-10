@@ -34,6 +34,7 @@ public class Planout4jTool {
         ShipTool.configureArgsParser(subparsers);
         NslistTool.configureArgsParser(subparsers);
         EvalTool.configureArgsParser(subparsers);
+        PerfTool.configureArgsParser(subparsers);
 
         String tool = null;
         try {

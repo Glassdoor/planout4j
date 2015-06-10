@@ -22,9 +22,7 @@ import com.glassdoor.planout4j.planout.Interpreter;
 import com.glassdoor.planout4j.util.Helper;
 
 /**
- * Command-line interface for getting information about namespaces in the target backend.
- * Supports listing all namespaces (with short summary), filtering by name pattern,
- * and displaying full details.
+ * Command-line interface for evaluating namespace, specific experiment, or an ad-hoc snippet.
  */
 public class EvalTool {
 
