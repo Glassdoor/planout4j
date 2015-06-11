@@ -90,8 +90,13 @@ public class EvalTool {
                             expConf, Collections.singleton(0));
                 }
             }
-            return exp == null ? ns.get().getParams() :
-                    new Interpreter(exp.def.getCopyOfScript(), exp.salt, inputMap, null).getParams();
+            if (exp == null) {
+                System.out.printf("\nInput gets allocated to %s experiment\n\n",
+                        MoreObjects.firstNonNull(ns.get().getExperiment(), nsConf.getDefaultExperiment()).name);
+                return ns.get().getParams();
+            } else {
+                return new Interpreter(exp.def.getCopyOfScript(), exp.salt, inputMap, null).getParams();
+            }
         } else {
             LOG.error("Namespace with name {} does not exist");
         }
