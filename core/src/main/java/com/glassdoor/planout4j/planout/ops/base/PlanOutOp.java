@@ -77,14 +77,15 @@ public abstract class PlanOutOp<T> {
     }
 
     public int getArgInt(final String name) {
-        final Object arg = getArgMixed(name);
-        checkState(arg instanceof Integer || arg instanceof Long, "%s: %s must be an integer.", getClass(), name);
-        return ((Number)arg).intValue();
+        final double d = getArgFloat(name);
+        final int i = (int)d;
+        checkState(i == d, "%s: %s must be an integer but is %s.", getClass(), name, d);
+        return i;
     }
 
     public double getArgFloat(final String name) {
         final Object arg = getArgMixed(name);
-        checkState(arg instanceof Number, "%s: %s must be a number.", getClass(), name);
+        checkState(arg instanceof Number, "%s: %s must be a number but is %s.", getClass(), name, arg);
         return ((Number)arg).doubleValue();
     }
 
