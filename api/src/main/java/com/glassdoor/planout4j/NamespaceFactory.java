@@ -32,5 +32,11 @@ public interface NamespaceFactory {
      * @return number of available namespaces
      */
     int getNamespaceCount();
+
+    /**
+     * Retrieves a "locked" (in terms of mutations) namespace config instance.
+     * @param name Valid namespace name
+     */
+    Optional<NamespaceConfig> getNamespaceConfig(String name);
     
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -22,9 +23,7 @@ import com.glassdoor.planout4j.planout.Interpreter;
 import com.glassdoor.planout4j.util.Helper;
 
 /**
- * Command-line interface for getting information about namespaces in the target backend.
- * Supports listing all namespaces (with short summary), filtering by name pattern,
- * and displaying full details.
+ * Command-line interface for evaluating namespace, specific experiment, or an ad-hoc snippet.
  */
 public class EvalTool {
 
@@ -37,7 +36,8 @@ public class EvalTool {
         nameOrScript.addArgument("-n", "--name").help("namespace name");
         final MutuallyExclusiveGroup experimentOrDefinition = eval.addMutuallyExclusiveGroup("additional selectors within namespace");
         experimentOrDefinition.addArgument("--exp").help("experiment name (requires --name NAME)");
-        experimentOrDefinition.addArgument("--def").help("experiment definition key (requires --name NAME)");
+        experimentOrDefinition.addArgument("--definition").help("experiment definition key (requires --name NAME)");
+        experimentOrDefinition.addArgument("--default").action(Arguments.storeTrue()).help("default experiment (requires --name NAME)");
         nameOrScript.addArgument("--script").help("planout DSL script");
         eval.addArgument("input").nargs("+").help("input parameters in the form of KEY=VALUE");
     }
@@ -72,7 +72,7 @@ public class EvalTool {
         if (ns.isPresent()) {
             final NamespaceConfig nsConf = ns.get().nsConf;
             Experiment exp = null;
-            final String expStr = parsedArgs.getString("exp"), defStr = parsedArgs.getString("def");
+            final String expStr = parsedArgs.getString("exp"), defStr = parsedArgs.getString("definition");
             if (expStr != null) {
                 exp = nsConf.getActiveExperiment(expStr);
                 if (exp == null) {
@@ -80,6 +80,7 @@ public class EvalTool {
                             expStr, name, nsConf.getActiveExperimentNames());
                     return null;
                 }
+                LOG.debug("Using experiment named {} (definition: {})", exp.name, exp.def.definition);
             } else if (defStr != null) {
                 final ExperimentConfig expConf = nsConf.getExperimentConfig(defStr);
                 if (expConf == null) {
@@ -90,10 +91,19 @@ public class EvalTool {
                     exp = new Experiment(defStr,
                             MoreObjects.firstNonNull(parsedArgs.getString("salt"), String.format("%s.%s", name, defStr)),
                             expConf, Collections.singleton(0));
+                    LOG.debug("Using experiment definition {}", defStr);
                 }
+            } else if (parsedArgs.getBoolean("default")) {
+                exp = nsConf.getDefaultExperiment();
+                LOG.debug("Using default experiment (def named {})", exp.def.definition);
             }
-            return exp == null ? ns.get().getParams() :
-                    new Interpreter(exp.def.getCopyOfScript(), exp.salt, inputMap, null).getParams();
+            if (exp == null) {
+                System.out.printf("\nInput gets allocated to %s experiment\n\n",
+                        MoreObjects.firstNonNull(ns.get().getExperiment(), nsConf.getDefaultExperiment()).name);
+                return ns.get().getParams();
+            } else {
+                return new Interpreter(exp.def.getCopyOfScript(), exp.salt, inputMap, null).getParams();
+            }
         } else {
             LOG.error("Namespace with name {} does not exist");
         }
@@ -101,14 +111,14 @@ public class EvalTool {
     }
 
     private static Map<String, ?> evaluateStandalone(final Namespace parsedArgs, final String script,
-                                                    final Map<String, Object> inputMap)
+                                                    final Map<String, Object> inputMap) throws ValidationException
     {
         try {
             return new Interpreter(Helper.deepCopy(PlanoutDSLCompiler.dsl_to_json(script), null),
                     parsedArgs.getString("salt"), inputMap, null).getParams();
         } catch (ValidationException e) {
-            LOG.error("Failed to compile script\n{}\n", e);
-            return null;
+            System.out.printf("\nFailed to evaluate script, see error trace below\n%s\n\n", script);
+            throw e;
         }
     }
 

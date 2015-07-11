@@ -37,10 +37,11 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
      *                  certain computed parameters, e.g. via query string; optional
      * @throws IllegalArgumentException in case of bad input (e.g. invalid namespace name, empty input, etc.)
      */
+    @Override
     public Optional<Namespace> getNamespace(final String name, final Map<String, ?> paramName2valueMap, final Map<String, ?> overrides) {
-       final Map<String, NamespaceConfig> configMap = getConfigMap();
-       NamespaceConfig namespaceConfig = configMap.get(name);
-       return Optional.fromNullable(namespaceConfig == null ? null : new Namespace(namespaceConfig, paramName2valueMap, overrides));
+        final Optional<NamespaceConfig> config = getNamespaceConfig(name);
+        return config.isPresent() ? Optional.of(new Namespace(config.get(), paramName2valueMap, overrides))
+                : Optional.<Namespace>absent();
     }
 
     /**
@@ -49,14 +50,22 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
      * @param paramName2valueMap Map of string parameter names to parameter values
      * @throws IllegalArgumentException in case of bad input (e.g. invalid namespace name, empty input, etc.)
      */
+    @Override
     public Optional<Namespace> getNamespace(final String name, final Map<String, ?> paramName2valueMap) {
         return getNamespace(name, paramName2valueMap, null);
     }
 
+    @Override
     public int getNamespaceCount() {
         return getConfigMap().size();
     }
-    
+
+    @Override
+    public Optional<NamespaceConfig> getNamespaceConfig(final String name) {
+        final Map<String, NamespaceConfig> configMap = getConfigMap();
+        return Optional.fromNullable(configMap.get(name));
+    }
+
     protected final Map<String, NamespaceConfig> getConfigMap() {
        checkNotNull(namespaceName2namespaceConfigMap, "Namespaces should have been loaded during initialization");
        return namespaceName2namespaceConfigMap;
