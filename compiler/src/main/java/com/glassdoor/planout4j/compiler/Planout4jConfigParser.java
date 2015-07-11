@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,14 @@ import com.glassdoor.planout4j.config.ValidationException;
  * @author ernest.mishkin
  */
 public abstract class Planout4jConfigParser {
+
+    public static Planout4jConfigParser createParser(final String className) {
+        try {
+            return ClassUtils.getClass(className).asSubclass(Planout4jConfigParser.class).newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to load parser class " + className, e);
+        }
+    }
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 

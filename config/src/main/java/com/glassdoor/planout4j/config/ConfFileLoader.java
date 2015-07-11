@@ -14,6 +14,7 @@ import com.typesafe.config.ConfigFactory;
  */
 public class ConfFileLoader {
 
+    public static final String P4J_CONF_FILE = "planout4jConfigFile";
     /**
      * Returns config object which will attempt to resolve properties in the following order:<ol>
      *     <li>custom config file pointed to by <code>planout4jConfigFile</code> system property</li>
@@ -23,7 +24,7 @@ public class ConfFileLoader {
      */
     public static Config loadConfig() {
         final Config internalConfig = ConfigFactory.load("planout4j").resolve();
-        final String customConfigPath = System.getProperty("planout4jConfigFile");
+        final String customConfigPath = System.getProperty(P4J_CONF_FILE);
         final Logger log = LoggerFactory.getLogger(ConfFileLoader.class);
         if (customConfigPath != null) {
             final File configFile = new File(customConfigPath);
