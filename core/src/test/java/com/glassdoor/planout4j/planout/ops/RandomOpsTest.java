@@ -212,4 +212,18 @@ public class RandomOpsTest {
         }
     }
 
+
+    @Test
+    public void testGetIntArg() {
+        // this should work as 1.0 (double) and 1.0 (float) can be seen as integers
+        RandomInteger randomInteger = new RandomInteger(new HashMap<>(ImmutableMap.<String, Object>of(
+                "min", 1.0, "max", 1.0f, "unit", "q")));
+        assertEquals(new Long(1), randomInteger.eval());
+        try {
+            // this should fail as 1.1 cannot be seen as an integer
+            new RandomInteger(new HashMap<>(ImmutableMap.<String, Object>of("min", 1.0, "max", 1.1, "unit", "q"))).eval();
+            fail("Expected IllegalStateException");
+        } catch (IllegalStateException e) {}
+    }
+
 }
