@@ -51,9 +51,10 @@
     <modules>
         <module>core</module>
         <module>compiler</module>
-	    <module>config</module>
-		<module>api</module>
+        <module>config</module>
+        <module>api</module>
         <module>tools</module>
+        <module>demos</module>
     </modules>
 
 

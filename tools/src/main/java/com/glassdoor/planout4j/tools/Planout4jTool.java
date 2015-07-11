@@ -16,6 +16,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.glassdoor.planout4j.config.ConfFileLoader;
+
 /**
  * This is a wrapper around all command-line tools, providing <code>main()</code> method,
  * performing command-line parsing, and setting up logging.
@@ -60,7 +62,7 @@ public class Planout4jTool {
 
 
     private static final Map<String, String> ARG2SYSPROP = new ImmutableMap.Builder<String, String>()
-            .put("config_file",    "planout4jConfigFile")
+            .put("config_file",    ConfFileLoader.P4J_CONF_FILE)
             .put("target_backend", "planout4j.backend.target")
             .put("source_dir",     "planout4j.backend.sourceConfDir")
             .put("dest_dir",       "planout4j.backend.compiledConfDir")

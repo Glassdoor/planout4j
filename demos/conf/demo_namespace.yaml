@@ -1,0 +1,72 @@
+# we will be experimenting with how many search results to show
+# and wether to display brief or full details with each result
+
+namespace:
+  # the primary unit for this namespace
+  unit: user_guid
+  # how many segments to split the traffic into
+  segments: 1000
+
+
+# define all experiments here once
+
+experiment_definitions:
+
+  - definition: exp_default
+    assign: !planout |
+        page_size = 20;
+        full_details = false;
+
+  # study effects of different page sizes only
+  - definition: exp_page_size
+    # PLanOut DSL, see http://facebook.github.io/planout/docs/planout-language-reference.html
+    assign: !planout |
+      page_size = uniformChoice(choices = [15, 20, 30], unit = user_guid);
+
+  # study effects of both detail level and page sizes applied together
+  - definition: exp_everything
+    assign: !planout |
+      full_details = bernoulliTrial(p=0.3, unit=user_guid);
+      if (full_details) {
+        page_size = weightedChoice(choices = [10, 15, 20], weights = [0.25, 0.5, 0.25], unit = user_guid);
+      } else {
+        page_size = weightedChoice(choices = [20, 25, 30], weights = [0.25, 0.5, 0.25], unit = user_guid);
+      }
+
+
+# default experiment is required, refer to an existing definition from above
+default_experiment: exp_default
+
+# instantiate experiments here with "add" action, possibly multiple times
+# each instance gets its own allotment of traffic
+# use "remove" action to remove a previously added experiment
+        
+experiment_sequence:
+
+# start first exp at 10%
+  - action: add                       # required, one of add, remove
+    definition: exp_page_size         # required for add, refers to an experiment defined in "experiment_definitions"
+    name: exp_page_size.1             # must be unique within experiment_sequence
+    segments: 100                     # how many segments to allocate to this experiment
+
+# ramp it up to 20%
+  - action: add
+    definition: exp_page_size
+    name: exp_page_size.2
+    segments: 100
+
+# got some data, let's cut back to the original 10%
+  - action: remove
+    name: exp_page_size.2
+
+# start the 2nd exp at 3%
+  - action: add
+    definition: exp_everything
+    name: exp_everything.1
+    segments: 30
+
+# beef it up to 30%
+  - action: add
+    definition: exp_everything
+    name: exp_everything.2
+    segments: 270
