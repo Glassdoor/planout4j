@@ -48,6 +48,7 @@ The project is comprised of the following maven modules:
 * `config` - this module defines API for reading namespace configuration data from / writing to a *backend*. Currently *file system backend* and *Redis backend* (both used internally at Glassdoor) are provided. The module also exposes `Planout4jRepository` interface which acts as a facade to one or more *backends*. It depends on `compiler` for parsing the data.
 * `api` - this is the primary entry point. It provides `NamespaceFactory` interface and several implementations. It depends on `config` for loading up each individual *namespace* and maintains a cache of those keyed by name. This is what majority of developers will likely use.
 * `tools` - this contains all command-line tools. Tools are described in details in the [usage](USAGE.md) document.
+* `demos` - this is what you think it is
 
 ## Maven
 Binary artifacts are hosted at Sonatype (OSSRH) repository and releases are propagated to Maven Central.
@@ -64,7 +65,7 @@ to the dependencies in `pom.xml`, for ex.:
 
 The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/planout4j-api)
 
-## Backends
+## Backends and Loading of Namespaces
 Backend is an abstraction used to access (read/write) namespace configuration data without concern of the underlying storage mechanism.
 Currently there are two types of backends:
 
@@ -74,13 +75,19 @@ Currently there are two types of backends:
 
 Backends come into play in two cases:
 
-1. `NamespaceFactory` implementation uses [Planout4jConfigRepositoryImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jRepositoryImpl.java) to fetch the namespace configs which have already been compiled to JSON. Redis backend is most appropriate for this purpose
-2. `Planout4jShipperTool` uses [Planout4jShipperImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jShipperImpl.java) to get all namespaces from **source** backend, compile & validate them, and store in **target** backend. File system - to - File system and File system - to - Redis are reasonable examples of the shipper setup.
+1. `NamespaceFactory` implementation uses [Planout4jConfigRepositoryImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jRepositoryImpl.java) to fetch the namespace configs (either in their source YAML form or previously compiled to JSON). Examples:
+  * Redis backend serving JSON
+  * File backend surving original YAML files (compiling on-demamd)
+2. `ShipperTool` uses [Planout4jShipperImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jShipperImpl.java) to get all namespaces from **source** backend, compile & validate them, and store in **target** backend. File system - to - File system and File system - to - Redis are reasonable examples of the shipper setup.
 
 Please see the [default configuration file](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/resources/planout4j.conf) to learn about the settings and ways to override them.
 
 ## Using PlanOut4J
 Please see detailed instructions [here](USAGE.md)
+
+Also please take a look at [demos](https://github.com/Glassdoor/planout4j/tree/master/demos/src/main/java/com/glassdoor/planout4j/demos)
+
+If you have any questions and/or suggestions, please join [PlanOut4J Google group](https://groups.google.com/d/forum/planout4j)
 
 ## PlanOut4J at Glassdoor
 
@@ -97,7 +104,7 @@ We actually use a pretty interesting configuration pipeline at Glassdoor. It wor
   * store the result JSON in Redis with namespace name as a part of the key
 * Our instance of `RefreshingNamespaceFactory` is configured to use Redis backend and every 2 mins pulls all namespace data from Redis.
 
-This scheme allowed us to achieve high level of automation, good system of checks and balances (git), and fast performance in a distributed environment (Redis, getting data in JSON). We intend to expose more of that in the code but there's still some work to be done to eliminate dependencies on various internal tools and libraries.
+This scheme allowed us to achieve high level of automation, good system of checks and balances (git), and fast performance in a distributed environment (Redis, getting data in JSON).
 
 ### Overriding Parameters
 

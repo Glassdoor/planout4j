@@ -40,6 +40,15 @@
         </developer>
     </developers>
 
+    <mailingLists>
+        <mailingList>
+            <name>Planout4J @ GoogleGroups</name>
+            <subscribe>planout4j@googlegroups.com</subscribe>
+            <post>planout4j@googlegroups.com</post>
+            <archive>https://groups.google.com/d/forum/planout4j</archive>
+        </mailingList>
+    </mailingLists>
+
 
     <scm>
         <connection>scm:git:git://github.com/Glassdoor/planout4j.git</connection>

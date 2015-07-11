@@ -82,6 +82,8 @@ The `tools` module produces "uber-jar" named `planout4j-tools-${version}.jar`. T
 	- lists all namespaces (name + short summary) in the target (effective) backend
 * eval
 	- evaluates namespace, experiment, or code snippet
+* perf
+   - runs performance test
 
 ## Sample use
 
@@ -106,17 +108,18 @@ int itemsToShow = ns.getParam("itemsToShow", 10);
 #### Using YAML namespace configuration (no SpringFramework)
 
 Let's assume there's `test-ns.yaml` file with the content as above (top of the document). We can compile it to JSON by executing compiler tool:
-`mvn exec:java -Dexec.mainClass=Planout4jCompilerTool -Dtool=compilePlanout4jConfig -Dinput=test-ns.yaml -Doutput=test-ns.json`
+`java -jar <path-to-planout-tools.jar> compile test-ns.yaml test-ns.json`
 This will produce `test-ns.json` which can be consumed by the code below.
 
 The code (specifically, `Planout4jRepositoryImpl`) will use `planout4j-config.conf` file to determine which *backend* to use as well as to set the backend's properties. All the properties can be overridden.
 
-__TODO__: Allow user-provided config file.
+(Note that one can also create a custom config file and point to it via `planout4jConfigFile` system property; this is the approach used in the supplied demos.
+
 
 ```java
 // obviously this is crude; in reality one would pass the property override
 // using command-line option (-D)
-// the configuration mechanism is currently quite raw, will be revisited
+System.setProperty("planout4j.backend.compiledConfDir", <folder containing test-ns.json>);
 NamespaceFactory nsFact = new SimpleNamespaceFactory();
 Namespace ns = nsFact.getNamespace("test-ns", Collections.singletonMap("userid", 123).get();
 String buttonText = ns.getParam("button_text", "default");
