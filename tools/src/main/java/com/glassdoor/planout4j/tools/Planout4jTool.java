@@ -34,6 +34,7 @@ public class Planout4jTool {
         ShipTool.configureArgsParser(subparsers);
         NslistTool.configureArgsParser(subparsers);
         EvalTool.configureArgsParser(subparsers);
+        PerfTool.configureArgsParser(subparsers);
 
         String tool = null;
         try {
@@ -52,9 +53,11 @@ public class Planout4jTool {
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             System.err.println("UNEXPECTED: Failed to load tool " + tool);
             e.printStackTrace(System.err);
+            System.exit(2);
         } catch (InvocationTargetException e) {
             System.err.println("Failed to execute tool " + tool);
             e.getCause().printStackTrace(System.err);
+            System.exit(3);
         }
     }
 
