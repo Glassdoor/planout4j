@@ -6,7 +6,7 @@
     <groupId>com.glassdoor.planout4j</groupId>
     <artifactId>planout4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <name>planout4j parent</name>
     <description>PlanOut for Java - parent POM</description>
@@ -54,7 +54,7 @@
         <connection>scm:git:git://github.com/Glassdoor/planout4j.git</connection>
         <developerConnection>scm:git:git@github.com:Glassdoor/planout4j.git</developerConnection>
         <url>https://github.com/Glassdoor/planout4j</url>
-        <tag>HEAD</tag>
+        <tag>RELEASE-1.1</tag>
     </scm>
 
     <modules>
