@@ -11,6 +11,7 @@ import com.google.common.io.Resources;
 
 import com.glassdoor.planout4j.config.ValidationException;
 import com.glassdoor.planout4j.util.Helper;
+import com.glassdoor.planout4j.util.VersionLogger;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -21,6 +22,10 @@ import static com.google.common.base.Preconditions.*;
  * @author ernest.mishkin
  */
 public class PlanoutDSLCompiler {
+
+    static {
+        VersionLogger.log("compiler");
+    }
 
     private static final String SCRIPT_RESOURCE = "/planout.js";
 

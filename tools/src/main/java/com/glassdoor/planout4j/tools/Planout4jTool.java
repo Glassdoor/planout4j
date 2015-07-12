@@ -2,6 +2,7 @@ package com.glassdoor.planout4j.tools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,12 +12,16 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.slf4j.LoggerFactory;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.glassdoor.planout4j.config.ConfFileLoader;
+import com.glassdoor.planout4j.util.VersionLogger;
+
+import static java.lang.String.format;
 
 /**
  * This is a wrapper around all command-line tools, providing <code>main()</code> method,
@@ -25,8 +30,12 @@ import com.glassdoor.planout4j.config.ConfFileLoader;
 public class Planout4jTool {
 
     public static void main(final String[] args) {
+        final Properties versions = VersionLogger.properties("tools");
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("planout4j-tools")
+                .version(format("${prog} %s built on %s", versions.getProperty("git.commit.id.describe"),
+                        versions.getProperty("git.build.time")))
                 .description("Tools for working with planout4j namespaces");
+        parser.addArgument("-v", "--version").action(Arguments.version());
         parser.addArgument("-c", "--config-file").nargs("?").help("path to configuration file");
         parser.addArgument("-l", "--log-level").nargs("?").setDefault("DEBUG").help("planout4j log level (default: DEBUG)");
         final Subparsers subparsers = parser.addSubparsers().title("tools").metavar("tool").dest("tool")
@@ -46,7 +55,7 @@ public class Planout4jTool {
             setSystemProperties(parsedArgs);
             LoggerFactory.getLogger(Planout4jTool.class).trace(parsedArgs.toString());
             LoggerFactory.getLogger(Planout4jTool.class).info("Starting {} tool", tool);
-            ClassUtils.getClass(String.format("%s.%sTool",
+            ClassUtils.getClass(format("%s.%sTool",
                     Planout4jTool.class.getPackage().getName(), StringUtils.capitalize(tool)))
                     .getMethod("execute", Namespace.class).invoke(null, parsedArgs);
         } catch (ArgumentParserException e) {

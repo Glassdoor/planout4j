@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.glassdoor.planout4j.planout.Mapper;
 import com.glassdoor.planout4j.planout.ops.utils.Operators;
 import com.glassdoor.planout4j.util.Helper;
+import com.glassdoor.planout4j.util.VersionLogger;
 
 import static com.google.common.base.Preconditions.*;
 import static java.lang.String.format;
@@ -19,6 +20,10 @@ import static java.lang.String.format;
  * @param <T> expected evaluation type
  */
 public abstract class PlanOutOp<T> {
+
+    static {
+        VersionLogger.log("core");
+    }
 
     protected static final Logger LOG = LoggerFactory.getLogger(PlanOutOp.class);
 

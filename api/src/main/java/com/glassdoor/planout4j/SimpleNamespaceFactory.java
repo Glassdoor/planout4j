@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 import com.glassdoor.planout4j.config.Planout4jRepository;
 import com.glassdoor.planout4j.config.Planout4jRepositoryImpl;
 import com.glassdoor.planout4j.config.ValidationException;
+import com.glassdoor.planout4j.util.VersionLogger;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -17,6 +18,10 @@ import static com.google.common.base.Preconditions.*;
  * Reads namespace data once and caches forever.
  */
 public class SimpleNamespaceFactory implements NamespaceFactory {
+
+    static {
+        VersionLogger.log("api");
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(SimpleNamespaceFactory.class);
 

@@ -7,12 +7,18 @@ import org.slf4j.LoggerFactory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
+import com.glassdoor.planout4j.util.VersionLogger;
+
 /**
  * Responsible for loading PlanOut4J config file.
  * Checks system property <code>planout4jConfigFile</code> and defaults to the embedded <code>planout4j.conf</code>
  * (which, of course, still allows for individual properties to be overridden via system props).
  */
 public class ConfFileLoader {
+
+    static {
+        VersionLogger.log("config");
+    }
 
     public static final String P4J_CONF_FILE = "planout4jConfigFile";
     /**
