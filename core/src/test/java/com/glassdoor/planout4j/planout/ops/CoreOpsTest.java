@@ -75,6 +75,13 @@ public class CoreOpsTest {
     }
 
     @Test
+    public void testMap() {
+        Map map = new JSONObjectBuilder().p("a", 1).p("b", "1").p("c", true).p("d", new JSONArrayBuilder().a(1).a(2));
+        Object m = runConfigSingle(new JSONObjectBuilder(map).p("op", "map"));
+        assertEquals(map, m);
+    }
+
+    @Test
     public void testCond() {
         for (int i=0; i < 2; i++) {
             Object c = new JSONObjectBuilder().p("op", "cond").p("cond", new JSONArrayBuilder()

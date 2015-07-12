@@ -35,6 +35,7 @@ public class Operators {
                 .put("return", Return.class)
                 .put("index", Index.class)
                 .put("array", Array.class)
+                .put("map", Dict.class)
                 .put("equals", Equals.class)
                 .put("cond", Cond.class)
                 .put("and", And.class)

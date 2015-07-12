@@ -32,6 +32,8 @@ experiment_definitions:
     assign: !planout |
         ratings_goal = 1;
         something_else = true;
+        map_test = @{ 'foo': 1, 'bar' : '2', 'baz': [10,20] };
+        val = map_test['foo'];
 
 
 # default experiment is required, refer to an existing definition from above
