@@ -27,6 +27,10 @@ experiment_definitions:
     assign: !planout |
         prob_collapse = randomFloat(min=0.0, max=1.0, unit=sourceid);
         collapse = bernoulliTrial(p=prob_collapse, unit=[storyid, viewerid]);
+        map_test = @{ 'foo': 1, 'bar' : '2', 'baz': [10,20] };
+        foo = map_test['foo'];
+        bar = map_test['bar'];
+        baz = map_test['baz'];
         
   - definition: Sample_Default
     assign: !planout |
