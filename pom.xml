@@ -78,6 +78,7 @@
         <maven-gpg.version>1.5</maven-gpg.version>
         <maven-release.version>2.5.2</maven-release.version>
         <sonatype-plugin.version>1.6.5</sonatype-plugin.version>
+        <git-commit-plugin.version>2.1.15</git-commit-plugin.version>
         <slf4j.version>1.7.12</slf4j.version>
         <log4j12.version>1.2.17</log4j12.version>
         <commons-lang3.version>3.4</commons-lang3.version>
@@ -133,6 +134,26 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>${git-commit-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <dateFormat>MM/dd/yyyy '@' HH:mm:ss z</dateFormat>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>target/classes/${project.artifactId}.git.properties</generateGitPropertiesFilename>
+
                 </configuration>
             </plugin>
         </plugins>
