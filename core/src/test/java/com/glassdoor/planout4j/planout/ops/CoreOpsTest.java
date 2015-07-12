@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -72,12 +74,18 @@ public class CoreOpsTest {
         Object arr = new JSONArrayBuilder().a(4).a(5).a("a");
         Object a = runConfigSingle(new JSONObjectBuilder().p("op", "array").p("values", arr));
         assertEquals(arr, a);
+        arr = new JSONArray();
+        a = runConfigSingle(new JSONObjectBuilder().p("op", "array").p("values", arr));
+        assertEquals(arr, a);
     }
 
     @Test
     public void testMap() {
         Map map = new JSONObjectBuilder().p("a", 1).p("b", "1").p("c", true).p("d", new JSONArrayBuilder().a(1).a(2));
         Object m = runConfigSingle(new JSONObjectBuilder(map).p("op", "map"));
+        assertEquals(map, m);
+        map = new JSONObject();
+        m = runConfigSingle(new JSONObjectBuilder(map).p("op", "map"));
         assertEquals(map, m);
     }
 
