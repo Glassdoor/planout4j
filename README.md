@@ -59,11 +59,11 @@ to the dependencies in `pom.xml`, for ex.:
  <dependency>
      <groupId>com.glassdoor.planout4j</groupId>
      <artifactId>planout4j-api</artifactId>
-     <version>1.0</version>
+     <version>1.1</version>
  </dependency>
  ```
 
-The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/staging/com/glassdoor/planout4j/planout4j-api)
+The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/public/com/glassdoor/planout4j)
 
 ## Backends and Loading of Namespaces
 Backend is an abstraction used to access (read/write) namespace configuration data without concern of the underlying storage mechanism.
