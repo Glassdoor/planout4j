@@ -64,7 +64,7 @@ public class Planout4jConfigClasspathBackend implements Planout4jConfigBackend {
             )
         );
 
-        for (String fileName : fileNames.split(System.getProperty("line.separator"))) {
+        for (String fileName : fileNames.split("\\n")) {
             if (fileName.endsWith(".json")) {
                 files.add(fileName);
             }
