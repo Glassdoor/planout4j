@@ -58,18 +58,18 @@ public class Planout4jConfigClasspathBackend implements Planout4jConfigBackend {
     private Iterable<String> getJsonResourceFiles() {
         final List<String> files = new ArrayList<>();
 
-        final String fileNames = readInputStream(
-            Planout4jConfigClasspathBackend.class.getClassLoader().getResourceAsStream(
-                String.format("%s/", getPlanoutSubdirectory())
-            )
+        final InputStream in = Planout4jConfigClasspathBackend.class.getClassLoader().getResourceAsStream(
+            String.format("%s/", getPlanoutSubdirectory())
         );
 
-        for (String fileName : fileNames.split("\\n")) {
-            if (fileName.endsWith(".json")) {
-                files.add(fileName);
+        try (final Scanner scanner = new Scanner(in)) {
+            while (scanner.hasNextLine()) {
+                final String fileName = scanner.nextLine();
+                if (fileName.endsWith(".json")) {
+                    files.add(fileName);
+                }
             }
         }
-
         return files;
     }
 
