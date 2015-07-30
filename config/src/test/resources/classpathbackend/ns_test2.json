@@ -1,0 +1,121 @@
+{
+  "namespace": {
+    "name": "internal.smoke_test",
+    "unit": "user_guid",
+    "segments": 100
+  },
+  "experiment_definitions": [
+    {
+      "definition": "Speed_NumResults_Test",
+      "assign": {
+        "op": "seq",
+        "seq": [
+          {
+            "op": "set",
+            "var": "srJobsResultsPerPage",
+            "value": {
+              "choices": {
+                "op": "array",
+                "values": [1, 5, 15]
+              },
+              "unit": {
+                "op": "get",
+                "var": "user_guid"
+              },
+              "op": "uniformChoice"
+            }
+          },
+          {
+            "op": "set",
+            "var": "useParallelSegmentSearch",
+            "value": {
+              "p": 0.5,
+              "unit": {
+                "op": "get",
+                "var": "user_guid"
+              },
+              "op": "bernoulliTrial"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": "UI_Button_Test",
+      "assign": {
+        "op": "seq",
+        "seq": [
+          {
+            "op": "set",
+            "var": "rating_filter_boxes",
+            "value": {
+              "choices": {
+                "op": "array",
+                "values": [
+                  "radio",
+                  "checkbox"
+                ]
+              },
+              "unit": {
+                "op": "get",
+                "var": "user_guid"
+              },
+              "op": "uniformChoice"
+            }
+          },
+          {
+            "op": "set",
+            "var": "use_check_boxes_for_job_type_filter",
+            "value": {
+              "p": 0.5,
+              "unit": {
+                "op": "get",
+                "var": "user_guid"
+              },
+              "op": "bernoulliTrial"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": "default",
+      "assign": {
+        "op": "seq",
+        "seq": [
+          {
+            "op": "set",
+            "var": "srJobsResultsPerPage",
+            "value": 15
+          },
+          {
+            "op": "set",
+            "var": "use_pclick",
+            "value": true
+          }
+        ]
+      }
+    }
+  ],
+  "default_experiment": "default",
+  "experiment_sequence": [
+    {
+      "action": "add",
+      "definition": "Speed_NumResults_Test",
+      "name": "Speed_NR_Ph1",
+      "segments": 20
+    },
+    {
+      "action": "add",
+      "definition": "UI_Button_Test",
+      "name": "UI_Ph1",
+      "segments": 40
+    },
+    {
+      "action": "add",
+      "definition": "Speed_NumResults_Test",
+      "name": "Speed_NR_Ph2",
+      "segments": 40
+    }
+  ]
+}
