@@ -11,6 +11,9 @@ import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+
 import com.glassdoor.planout4j.NamespaceConfig;
 import com.glassdoor.planout4j.config.ValidationException;
 
@@ -20,9 +23,14 @@ import com.glassdoor.planout4j.config.ValidationException;
  */
 public abstract class Planout4jConfigParser {
 
+    private final static Map<String, String> ALIASES = ImmutableMap.of(
+            "yaml", YAMLConfigParser.class.getName(),
+            "json", JSONConfigParser.class.getName());
+
     public static Planout4jConfigParser createParser(final String className) {
         try {
-            return ClassUtils.getClass(className).asSubclass(Planout4jConfigParser.class).newInstance();
+            return ClassUtils.getClass(MoreObjects.firstNonNull(ALIASES.get(className), className))
+                    .asSubclass(Planout4jConfigParser.class).newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to load parser class " + className, e);
         }
