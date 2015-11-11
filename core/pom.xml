@@ -15,4 +15,10 @@
     <name>planout4j core</name>
     <description>PlanOut for Java core infrastructure (mostly ported from original PlanOut)</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+    </dependencies>
 </project>

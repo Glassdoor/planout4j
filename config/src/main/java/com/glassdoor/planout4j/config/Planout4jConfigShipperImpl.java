@@ -43,7 +43,7 @@ public class Planout4jConfigShipperImpl implements Planout4jConfigShipper {
          targetBackend.persist(Maps.transformValues(compiledNamespace2Config, new Function<NamespaceConfig, String>() {
             @Override
             public String apply(final NamespaceConfig input) {
-               return JSONValue.toJSONString(input.getConfig());
+               return new JsonConfigFormatterImpl().format(input.getConfig());
             }
          }));
       }

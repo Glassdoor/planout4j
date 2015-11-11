@@ -1,6 +1,7 @@
 package com.glassdoor.planout4j.tools;
 
 import java.io.*;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +46,15 @@ public class CompileTool {
             file = null;
         }
         final String output = parsedArgs.getString("output");
+
         LOG.debug("Output goes to {}", output != null ? new File(output).getAbsolutePath() : "<STDOUT>");
         final Reader reader = file != null ? new FileReader(file) : new StringReader(input);
         final String namespace = yaml ? com.google.common.io.Files.getNameWithoutExtension(input) : null;
         try (final Writer writer = output != null ? new FileWriter(output) : new OutputStreamWriter(System.out)) {
-            writer.write(Planout4jTool.getGson(parsedArgs).toJson(yaml ?
+            final Map<String, ?> config = yaml ?
                     new YAMLConfigParser().parseAndValidate(reader, namespace).getConfig() :
-                    PlanoutDSLCompiler.dsl_to_json(CharStreams.toString(reader))));
+                    PlanoutDSLCompiler.dsl_to_json(CharStreams.toString(reader));
+            writer.write(Planout4jTool.getConfigFormatter(parsedArgs).format(config));
         }
     }
 
