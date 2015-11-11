@@ -13,12 +13,17 @@ import org.apache.log4j.PatternLayout;
 import org.slf4j.LoggerFactory;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.*;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.glassdoor.planout4j.config.ConfFileLoader;
+import com.glassdoor.planout4j.config.ConfigFormatter;
+import com.glassdoor.planout4j.config.JsonConfigFormatterImpl;
 import com.glassdoor.planout4j.util.VersionLogger;
 
 import static java.lang.String.format;
@@ -114,6 +119,10 @@ public class Planout4jTool {
         return builder.create();
     }
 
+    static ConfigFormatter getConfigFormatter(final Namespace parsedArgs) {
+        final boolean pretty = parsedArgs.getBoolean("pretty") == Boolean.TRUE;
+        return new JsonConfigFormatterImpl(pretty);
+    }
 
     private static void setupLoggin(final String level) {
         Logger.getRootLogger().addAppender(new ConsoleAppender(

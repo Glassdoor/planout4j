@@ -17,9 +17,9 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
-import com.google.gson.Gson;
 
 import com.glassdoor.planout4j.NamespaceConfig;
+import com.glassdoor.planout4j.config.ConfigFormatter;
 import com.glassdoor.planout4j.config.Planout4jRepositoryImpl;
 import com.glassdoor.planout4j.config.ValidationException;
 
@@ -51,7 +51,7 @@ public class NslistTool {
         final DisplayMode mode = parsedArgs.get("mode");
         final Table table = new Table(5, BorderStyle.CLASSIC, ShownBorders.ALL);
         addCells(table, "name", "total segs", "used segs", "definitions", "active experiments");
-        final Gson gson = Planout4jTool.getGson(parsedArgs);
+        final ConfigFormatter configFormatter = Planout4jTool.getConfigFormatter(parsedArgs);
 
         final String namePatternStr = StringUtils.lowerCase(parsedArgs.getString("name"));
         Pattern namePattern = null;
@@ -73,7 +73,7 @@ public class NslistTool {
                 switch (mode) {
                     case full:
                         System.out.printf("********************** START of %s *********************\n", name);
-                        System.out.println(gson.toJson(nsConf.getConfig()));
+                        System.out.println(configFormatter.format(nsConf.getConfig()));
                         System.out.printf("*********************** END of %s **********************\n", name);
                         break;
                     case summary:
