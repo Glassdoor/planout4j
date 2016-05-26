@@ -29,9 +29,13 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
 
     protected volatile Map<String, NamespaceConfig> namespaceName2namespaceConfigMap = Collections.emptyMap();
 
-    public SimpleNamespaceFactory() {
-        planout4jRepository = new Planout4jRepositoryImpl();
+    public SimpleNamespaceFactory(final Planout4jRepository planout4jRepository) {
+        this.planout4jRepository = planout4jRepository;
         namespaceName2namespaceConfigMap = readConfig();
+    }
+
+    public SimpleNamespaceFactory() {
+        this(new Planout4jRepositoryImpl());
     }
 
     /**
@@ -71,6 +75,15 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
         return Optional.fromNullable(configMap.get(name));
     }
 
+    public void refresh() {
+        LOG.info("refreshing ...");
+        try {
+            namespaceName2namespaceConfigMap = readConfig();
+        } catch (Exception e) {
+            LOG.error("Namespace refresh failed: Invalid configuration", e);
+        }
+    }
+
     protected final Map<String, NamespaceConfig> getConfigMap() {
        checkNotNull(namespaceName2namespaceConfigMap, "Namespaces should have been loaded during initialization");
        return namespaceName2namespaceConfigMap;
@@ -80,7 +93,7 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
         LOG.debug("loading namespace data...");
         try {
             return planout4jRepository.loadAllNamespaceConfigs();
-        } catch (ValidationException e) {
+        } catch (final ValidationException e) {
             LOG.error("Failed to (re)load namespace data, see earlier error messages", e);
             return namespaceName2namespaceConfigMap;
         }

@@ -2,48 +2,58 @@ package com.glassdoor.planout4j.config;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.typesafe.config.Config;
 import redis.clients.jedis.Jedis;
+
+import static java.util.Objects.requireNonNull;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
 
 /**
  * Manages reading and writing of Planout4j configuration from / to <a href="http://redis.io">Redis</a> NoSQL store.
  */
 public class Planout4jConfigRedisBackend implements Planout4jConfigBackend {
 
-   private static final Logger LOG = LoggerFactory.getLogger(Planout4jConfigRedisBackend.class);
+    private Jedis jedis;
+    private String redisKey;
 
-   private Jedis jedis;
-   private String redisKey;
+    public Planout4jConfigRedisBackend() {}
 
-   public void configure(final Config config) {
-      jedis = new Jedis(config.getString("host"), config.getInt("port"));
-      redisKey = config.getString("key");
-   }
+    public Planout4jConfigRedisBackend(final Jedis jedis, final String redisKey) {
+        this.jedis = requireNonNull(jedis);
+        this.redisKey = defaultIfEmpty(redisKey, "planout4j");
+    }
 
-   @Override
-   public Map<String, String> loadAll() {
-      return jedis.hgetAll(redisKey);
-   }
+    @Override
+    public void configure(final Config config) {
+        jedis = new Jedis(config.getString("host"), config.getInt("port"));
+        redisKey = config.getString("key");
+    }
 
-   @Override
-   public void persist(Map<String, String> configData) {
-      jedis.del(redisKey);
-      if (configData != null && !configData.isEmpty()) {
-         jedis.hmset(redisKey, configData);
-      }
-   }
+    @Override
+    public Map<String, String> loadAll() {
+        return jedis.hgetAll(redisKey);
+    }
 
-   @Override
-   public String persistenceLayer() {
-      return "REDIS";
-   }
+    @Override
+    public void persist(final Map<String, String> configData) {
+        jedis.del(redisKey);
+        if (configData != null && !configData.isEmpty()) {
+            jedis.hmset(redisKey, configData);
+        }
+    }
 
-   @Override
-   public String persistenceDestination() {
-      return String.format("%s @ %s:%s, key = %s", persistenceLayer(),
-              jedis.getClient().getHost(), jedis.getClient().getPort(), redisKey);
-   }
+    @Override
+    public String persistenceLayer() {
+        return "REDIS";
+    }
+
+    @Override
+    public String persistenceDestination() {
+        //noinspection resource
+        return String.format("%s @ %s:%s, key = %s", persistenceLayer(),
+                jedis.getClient().getHost(), jedis.getClient().getPort(), redisKey);
+    }
 
 }
