@@ -1,5 +1,8 @@
 package com.glassdoor.planout4j.config;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.glassdoor.planout4j.NamespaceConfig;
@@ -9,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 
 public class Planout4jRepositoryImpl implements Planout4jRepository {
@@ -39,8 +41,10 @@ public class Planout4jRepositoryImpl implements Planout4jRepository {
     @Override
     public Map<String, NamespaceConfig> loadAllNamespaceConfigs() throws ValidationException {
         final Map<String, String> namespace2Config = configBackend.loadAll();
+        final List<String> sortedNamespaceKeys = new ArrayList<>(namespace2Config.keySet());
+        Collections.sort(sortedNamespaceKeys);
         LOG.info("Loaded {} planout4j namespace config(s) from {} ; namespaces: {}",
-                namespace2Config.size(), configBackend.persistenceDestination(), namespace2Config.keySet().stream().sorted().collect(toList()));
+                namespace2Config.size(), configBackend.persistenceDestination(), sortedNamespaceKeys);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Loaded planout4j namespace config(s) from {}:\n{}", configBackend.persistenceDestination(), namespace2Config);
         }
