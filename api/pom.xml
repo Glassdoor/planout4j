@@ -27,6 +27,9 @@
             </activation>
             <properties>
                 <planout4j.ConcurrentAccessTest.threads>10</planout4j.ConcurrentAccessTest.threads>
+                <planout4j.ConcurrentAccessTest.users>1000</planout4j.ConcurrentAccessTest.users>
+                <planout4j.ConcurrentAccessTest.requests>100000</planout4j.ConcurrentAccessTest.requests>
+                <planout4j.ConcurrentAccessTest.firstParts>100</planout4j.ConcurrentAccessTest.firstParts>
             </properties>
         </profile>
     </profiles>
@@ -38,6 +41,9 @@
                 <configuration>
                     <systemPropertyVariables>
                         <planout4j.ConcurrentAccessTest.threads>${planout4j.ConcurrentAccessTest.threads}</planout4j.ConcurrentAccessTest.threads>
+                        <planout4j.ConcurrentAccessTest.users>${planout4j.ConcurrentAccessTest.users}</planout4j.ConcurrentAccessTest.users>
+                        <planout4j.ConcurrentAccessTest.requests>${planout4j.ConcurrentAccessTest.requests}</planout4j.ConcurrentAccessTest.requests>
+                        <planout4j.ConcurrentAccessTest.firstParts>${planout4j.ConcurrentAccessTest.firstParts}</planout4j.ConcurrentAccessTest.firstParts>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
