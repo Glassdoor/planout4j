@@ -15,13 +15,9 @@ public class RefreshableNamespaceFactory extends SimpleNamespaceFactory {
      * This method is called periodically, in order to get the latest namespace configuration.
      */
     @Scheduled(initialDelay = 120_000, fixedDelay = 120_000)
+    @Override
     public void refresh() {
-       LOG.info("refreshing ...");
-       try {
-         namespaceName2namespaceConfigMap = readConfig();
-      } catch (Exception e) {
-         LOG.error("Namespace refresh failed: Invalid configuration", e);
-      }
+        super.refresh();
     }
 
 }
