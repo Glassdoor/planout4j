@@ -4,6 +4,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Properties;
 
+import com.glassdoor.planout4j.config.ConfFileLoader;
+import com.glassdoor.planout4j.config.ConfigFormatter;
+import com.glassdoor.planout4j.config.JsonConfigFormatterImpl;
+import com.glassdoor.planout4j.util.VersionLogger;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.ConsoleAppender;
@@ -11,20 +24,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.slf4j.LoggerFactory;
-import net.sourceforge.argparse4j.ArgumentParsers;
-import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentParser;
-import net.sourceforge.argparse4j.inf.ArgumentParserException;
-import net.sourceforge.argparse4j.inf.Namespace;
-import net.sourceforge.argparse4j.inf.Subparsers;
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import com.glassdoor.planout4j.config.ConfFileLoader;
-import com.glassdoor.planout4j.config.ConfigFormatter;
-import com.glassdoor.planout4j.config.JsonConfigFormatterImpl;
-import com.glassdoor.planout4j.util.VersionLogger;
 
 import static java.lang.String.format;
 
@@ -32,8 +31,9 @@ import static java.lang.String.format;
  * This is a wrapper around all command-line tools, providing <code>main()</code> method,
  * performing command-line parsing, and setting up logging.
  */
-public class Planout4jTool {
+public final class Planout4jTool {
 
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void main(final String[] args) {
         final Properties versions = VersionLogger.properties("tools");
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("planout4j-tools")
@@ -63,14 +63,14 @@ public class Planout4jTool {
             ClassUtils.getClass(format("%s.%sTool",
                     Planout4jTool.class.getPackage().getName(), StringUtils.capitalize(tool)))
                     .getMethod("execute", Namespace.class).invoke(null, parsedArgs);
-        } catch (ArgumentParserException e) {
+        } catch (final ArgumentParserException e) {
             parser.handleError(e);
             System.exit(1);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
+        } catch (final ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             System.err.println("UNEXPECTED: Failed to load tool " + tool);
             e.printStackTrace(System.err);
             System.exit(2);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             System.err.println("Failed to execute tool " + tool);
             e.getCause().printStackTrace(System.err);
             System.exit(3);
@@ -78,7 +78,7 @@ public class Planout4jTool {
     }
 
 
-    private static final Map<String, String> ARG2SYSPROP = new ImmutableMap.Builder<String, String>()
+    private static final Map<String, String> ARG2SYSPROP = new Builder<String, String>()
             .put("config_file",    ConfFileLoader.P4J_CONF_FILE)
             .put("target_backend", "planout4j.backend.target")
             .put("runtime_repo",   "planout4j.backend.runtimeRepo")
@@ -86,11 +86,12 @@ public class Planout4jTool {
             .put("source_dir",     "planout4j.backend.sourceConfDir")
             .put("dest_dir",       "planout4j.backend.compiledConfDir")
             .put("redis_host",     "planout4j.backend.redis.host")
+            .put("redis_port",     "planout4j.backend.redis.port")
             .put("redis_key",      "planout4j.backend.redis.key")
             .build();
 
     static void setSystemProperties(final Namespace parsedArgs) {
-        for (String argName : ARG2SYSPROP.keySet()) {
+        for (final String argName : ARG2SYSPROP.keySet()) {
             final String value = parsedArgs.getString(argName);
             if (value != null) {
                 System.setProperty(ARG2SYSPROP.get(argName), value);
@@ -108,6 +109,7 @@ public class Planout4jTool {
         }
         parser.addArgument("-d", "--dest-dir").help("destination directory for the file backend");
         parser.addArgument("--redis-host").help("redis host to use with redis backend");
+        parser.addArgument("--redis-port").help("redis port number to use with redis backend");
         parser.addArgument("--redis-key").help("redis key to use with redis backend");
     }
 
@@ -130,5 +132,8 @@ public class Planout4jTool {
         Logger.getRootLogger().setLevel(Level.INFO);
         Logger.getLogger("com.glassdoor.planout4j").setLevel(Level.toLevel(level));
     }
+
+
+    private Planout4jTool() {}
 
 }
