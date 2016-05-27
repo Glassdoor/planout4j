@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.*;
  * The experiment's parameters assignment will be eagerly evaluated and cached.
  * @author ernest.mishkin
  */
-public class Namespace {
+public class Namespace extends ParamsAccessor {
 
     /**
      * When present in the input map with {@link Boolean#TRUE} as the value,
@@ -53,6 +53,7 @@ public class Namespace {
     /**
      * @return Cached (eagerly evaluated) Map of parameter assignments
      */
+    @Override
     public Map<String, ?> getParams() {
         return assignments;
     }
@@ -93,7 +94,7 @@ public class Namespace {
         } else {
             experiment = nsConf.getExperiment(input);
             if (experiment != null) {
-                Map<String, Object> tmp = new HashMap<>(defaultAssignments); // the tmp trick is due to generics issues
+                final Map<String, Object> tmp = new HashMap<>(defaultAssignments); // the tmp trick is due to generics issues
                 final Map<String, ?> specificAssignments = evaluateExperiment(experiment, input, overrides);
                 tmp.putAll(specificAssignments);
                 assignments = tmp;
@@ -106,23 +107,6 @@ public class Namespace {
     protected boolean isBaseline(final Map<String, ?> input) {
         final Object baseline = input.get(BASELINE_KEY);
         return baseline instanceof Boolean && (Boolean)baseline;
-    }
-
-
-    public int getParam(final String key, final int def) {
-        return getParams().containsKey(key) ? ((Number)getParams().get(key)).intValue() : def;
-    }
-
-    public float getParam(final String key, final float def) {
-        return getParams().containsKey(key) ? ((Number)getParams().get(key)).floatValue() : def;
-    }
-
-    public boolean getParam(final String key, final boolean def) {
-        return getParams().containsKey(key) ? ((Boolean)getParams().get(key)) : def;
-    }
-
-    public String getParam(final String key, final String def) {
-        return getParams().containsKey(key) ? ((String)getParams().get(key)) : def;
     }
 
 }
