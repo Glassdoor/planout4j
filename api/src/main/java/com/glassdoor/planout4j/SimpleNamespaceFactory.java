@@ -3,16 +3,19 @@ package com.glassdoor.planout4j;
 import java.util.Collections;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.google.common.base.Optional;
-
 import com.glassdoor.planout4j.config.Planout4jRepository;
 import com.glassdoor.planout4j.config.Planout4jRepositoryImpl;
 import com.glassdoor.planout4j.config.ValidationException;
+import com.glassdoor.planout4j.logging.LogRecord;
+import com.glassdoor.planout4j.logging.Planout4jLogger;
+import com.glassdoor.planout4j.logging.Planout4jLoggerFactory;
 import com.glassdoor.planout4j.util.VersionLogger;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Reads namespace data once and caches forever.
@@ -26,16 +29,18 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleNamespaceFactory.class);
 
     protected final Planout4jRepository planout4jRepository;
+    protected final Planout4jLogger p4jLogger;
 
     protected volatile Map<String, NamespaceConfig> namespaceName2namespaceConfigMap = Collections.emptyMap();
 
-    public SimpleNamespaceFactory(final Planout4jRepository planout4jRepository) {
+    public SimpleNamespaceFactory(final Planout4jRepository planout4jRepository, final Planout4jLogger p4jLogger) {
         this.planout4jRepository = planout4jRepository;
+        this.p4jLogger = MoreObjects.firstNonNull(p4jLogger, Planout4jLogger.NO_OP);
         namespaceName2namespaceConfigMap = readConfig();
     }
 
     public SimpleNamespaceFactory() {
-        this(new Planout4jRepositoryImpl());
+        this(new Planout4jRepositoryImpl(), Planout4jLoggerFactory.getLogger());
     }
 
     /**
@@ -49,8 +54,18 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
     @Override
     public Optional<Namespace> getNamespace(final String name, final Map<String, ?> paramName2valueMap, final Map<String, ?> overrides) {
         final Optional<NamespaceConfig> config = getNamespaceConfig(name);
-        return config.isPresent() ? Optional.of(new Namespace(config.get(), paramName2valueMap, overrides))
-                : Optional.<Namespace>absent();
+        final Namespace ns;
+        if (config.isPresent()) {
+            ns = new Namespace(config.get(), paramName2valueMap, overrides);
+            try {
+                p4jLogger.exposed(new LogRecord(ns, paramName2valueMap, overrides));
+            } catch (final RuntimeException e) {
+                LOG.warn("Failure in exposure logging", e);
+            }
+        } else {
+            ns = null;
+        }
+        return Optional.fromNullable(ns);
     }
 
     /**
@@ -79,7 +94,7 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
         LOG.info("refreshing ...");
         try {
             namespaceName2namespaceConfigMap = readConfig();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Namespace refresh failed: Invalid configuration", e);
         }
     }
