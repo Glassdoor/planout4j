@@ -121,7 +121,7 @@ public class NamespaceConfigBuilder {
         }
         if (value instanceof Integer) {
             final Integer integer = cast(value);
-            checkArgument(integer > 0, "%s key: all integers must be positive, this is one is %s (%s)", key, value, context);
+            checkArgument(integer > 0, "%s key: all integers must be positive, this one is %s (%s)", key, value, context);
         }
         return valueClass.cast(value);
     }
