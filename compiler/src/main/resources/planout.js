@@ -247,7 +247,9 @@ parseError: function parseError(str, hash) {
 parse: function parse(input) {
     var self = this, stack = [0], tstack = [], vstack = [null], lstack = [], table = this.table, yytext = '', yylineno = 0, yyleng = 0, recovering = 0, TERROR = 2, EOF = 1;
     var args = lstack.slice.call(arguments, 1);
-    var lexer = Object.create(this.lexer);
+    function lexerCopy() {}
+    lexerCopy.prototype = this.lexer;
+    var lexer = new lexerCopy
     var sharedState = { yy: {} };
     for (var k in this.yy) {
         if (Object.prototype.hasOwnProperty.call(this.yy, k)) {
