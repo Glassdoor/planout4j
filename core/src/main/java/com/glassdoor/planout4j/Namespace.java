@@ -70,6 +70,9 @@ public class Namespace extends ParamsAccessor {
     * @return The active experiment for the specified input
     */
     public Experiment getExperiment() {
+      if (experiment == null) {
+        experiment = nsConf.getDefaultExperiment();
+      }
       return experiment;
     }
 
