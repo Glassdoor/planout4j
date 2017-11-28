@@ -99,7 +99,8 @@ import java.util.Collections;
 import com.glassdoor.planout4j.*;
 import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
 nsConf = new NamespaceConfig("my namespace", 100, "userid", null);
-nsConf.defineExperiment("default", "itemsToShow = uniformChoice(choices=[5, 10, 20], unit=userid);");
+String script = "itemsToShow = uniformChoice(choices=[5, 10, 20], unit=userid);"
+nsConf.defineExperiment("default", PlanoutDSLCompiler.dsl_to_json(script);
 nsConf.setDefaultExperiment("default");
 Namespace ns = new Namespace(nsConf, Collections.singletonMap("userid", 123), null);
 int itemsToShow = ns.getParam("itemsToShow", 10);
