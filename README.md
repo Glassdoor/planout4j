@@ -62,7 +62,7 @@ to the dependencies in `pom.xml`, for ex.:
  <dependency>
      <groupId>com.glassdoor.planout4j</groupId>
      <artifactId>planout4j-api</artifactId>
-     <version>1.1</version>
+     <version>1.2</version>
  </dependency>
  ```
 
