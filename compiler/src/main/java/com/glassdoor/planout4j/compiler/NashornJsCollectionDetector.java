@@ -1,22 +1,21 @@
 package com.glassdoor.planout4j.compiler;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
-
+import com.glassdoor.planout4j.util.CollectionDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.glassdoor.planout4j.util.CollectionDetector;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * Helper to resolve differences between JS engine shipped with JDK7 (Rhino) and the one shipped with JDK8 (Nashorn).
  * More details here: http://stackoverflow.com/questions/22492641/java8-js-nashorn-convert-array-to-java-array
  * <br>Detects whether Nashorn is used and extracts lists accordingly.
  */
-public class JSCollectionDetector implements CollectionDetector {
+public class NashornJsCollectionDetector implements CollectionDetector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JSCollectionDetector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NashornJsCollectionDetector.class);
 
     private static Class<?> SOM_CL;
     private static Method IS_ARRAY;
@@ -33,13 +32,14 @@ public class JSCollectionDetector implements CollectionDetector {
         }
     }
 
-    private static final JSCollectionDetector JS_LIST_DETECTOR = new JSCollectionDetector();
+    public static final NashornJsCollectionDetector INSTANCE = new NashornJsCollectionDetector();
 
-    public static CollectionDetector get() {
-        return SOM_CL == null ? DEFAULT : JS_LIST_DETECTOR;
+    private NashornJsCollectionDetector() {
     }
 
-    private JSCollectionDetector() {}
+    public boolean isSupported() {
+        return SOM_CL != null;
+    }
 
     @Override
     public boolean isCollection(final Object o) {

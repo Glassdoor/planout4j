@@ -1,19 +1,20 @@
 package com.glassdoor.planout4j.compiler;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
-import org.apache.commons.lang3.StringUtils;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-
 import com.glassdoor.planout4j.config.ValidationException;
+import com.glassdoor.planout4j.util.CollectionDetector;
 import com.glassdoor.planout4j.util.Helper;
 import com.glassdoor.planout4j.util.VersionLogger;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import org.apache.commons.lang3.StringUtils;
 
-import static com.google.common.base.Preconditions.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.io.IOException;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Utilizes JavaScript-based PlanOut DSL to JSON compiler.
@@ -55,10 +56,20 @@ public class PlanoutDSLCompiler {
             final Object json = engine.get("output");
             checkState(json instanceof Map, "Expected compiled object to be an instance of Map, but it is %s",
                     Helper.getClassName(json));
-            return Helper.deepCopy((Map<String, ?>)json, JSCollectionDetector.get());
+            return Helper.deepCopy((Map<String, ?>) json, getDetector());
         } catch (Exception e) {
             throw new ValidationException("Failed to compile DSL:\n" + dsl, e);
         }
+    }
+
+    private static CollectionDetector getDetector() {
+        if (GraalJsCollectionDetector.INSTANCE.isSupported()) {
+            return GraalJsCollectionDetector.INSTANCE;
+        }
+        if (NashornJsCollectionDetector.INSTANCE.isSupported()) {
+            return NashornJsCollectionDetector.INSTANCE;
+        }
+        return CollectionDetector.DEFAULT;
     }
 
 }
