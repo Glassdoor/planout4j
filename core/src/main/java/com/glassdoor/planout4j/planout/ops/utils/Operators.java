@@ -55,6 +55,8 @@ public class Operators {
                 .put("coalesce", Coalesce.class)
                 .put("product", Product.class)
                 .put("sum", Sum.class)
+                .put("exp", Exp.class)
+                .put("sqrt", Sqrt.class)
                 .put("randomFloat", RandomFloat.class)
                 .put("randomInteger", RandomInteger.class)
                 .put("bernoulliTrial", BernoulliTrial.class)
