@@ -272,6 +272,31 @@ public class CoreOpsTest {
         assertEquals(1l, round);
     }
 
+    @Test
+    public void testExp() {
+        Object exp =  runConfigSingle(new JSONObjectBuilder().p("op", "exp").p("value", 1));
+        assertEquals(2.718281828459045, exp);
+        exp = runConfigSingle(new JSONObjectBuilder().p("op", "exp").p("value", -0.5));
+        assertEquals(0.6065306597126334, exp);
+        exp = runConfigSingle(new JSONObjectBuilder().p("op", "exp").p("value", 0.123));
+        assertEquals(1.1308844209474893, exp);
+        exp = runConfigSingle(new JSONObjectBuilder().p("op", "exp").p("value", 1.88));
+        assertEquals(6.553504862191148, exp);
+    }
+
+    @Test
+    public void testSqrt() {
+        Object sqrt =  runConfigSingle(new JSONObjectBuilder().p("op", "sqrt").p("value", 1));
+        assertEquals(1.0, sqrt);
+        sqrt = runConfigSingle(new JSONObjectBuilder().p("op", "sqrt").p("value", 0.123));
+        assertEquals(0.3507135583350036, sqrt);
+        sqrt = runConfigSingle(new JSONObjectBuilder().p("op", "sqrt").p("value", 1.88));
+        assertEquals(1.3711309200802089, sqrt);
+        try {
+            sqrt = runConfigSingle(new JSONObjectBuilder().p("op", "sqrt").p("value", -0.5));
+        } catch (IllegalArgumentException e) {}
+    }
+
     private Interpreter returnRunner(Object value) {
         Object c = new JSONObjectBuilder().p("op", "seq").p("seq", new JSONArrayBuilder()
                         .a(new JSONObjectBuilder().p("op", "set").p("value", 2).p("var", "x"))
