@@ -1,7 +1,7 @@
 ### NOTE 
 This repo is not being maintained any longer. There is active fork at https://github.com/nkconnor/planout4j
 
-[![Build Status](https://travis-ci.org/Glassdoor/planout4j.svg?branch=master)](https://travis-ci.org/Glassdoor/planout4j)
+[![Build Status](https://travis-ci.org/zhiyuan-lin/planout4j.svg?branch=master)](https://travis-ci.org/zhiyuan-lin/planout4j)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.glassdoor.planout4j/planout4j-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.glassdoor.planout4j/planout4j-core)
 
 # PlanOut4J
@@ -66,29 +66,29 @@ to the dependencies in `pom.xml`, for ex.:
  </dependency>
  ```
 
-The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/public/com/glassdoor/planout4j)
+The current set of snapshot artifacts is available [here](https://oss.sonatype.org/content/groups/public/com/zhiyuan-lin/planout4j)
 
 ## Backends and Loading of Namespaces
 Backend is an abstraction used to access (read/write) namespace configuration data without concern of the underlying storage mechanism.
 Currently there are two types of backends:
 
-* File system ([implementation](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jConfigFileBackend.java))
+* File system ([implementation](https://github.com/zhiyuan-lin/planout4j/blob/master/config/src/main/java/com/zhiyuan-lin/planout4j/config/Planout4jConfigFileBackend.java))
 	* has separate properties for read (source) and write (target) use
-* Redis ([implementation](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jConfigRedisBackend.java))
+* Redis ([implementation](https://github.com/zhiyuan-lin/planout4j/blob/master/config/src/main/java/com/zhiyuan-lin/planout4j/config/Planout4jConfigRedisBackend.java))
 
 Backends come into play in two cases:
 
-1. `NamespaceFactory` implementation uses [Planout4jConfigRepositoryImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jRepositoryImpl.java) to fetch the namespace configs (either in their source YAML form or previously compiled to JSON). Examples:
+1. `NamespaceFactory` implementation uses [Planout4jConfigRepositoryImpl](https://github.com/zhiyuan-lin/planout4j/blob/master/config/src/main/java/com/zhiyuan-lin/planout4j/config/Planout4jRepositoryImpl.java) to fetch the namespace configs (either in their source YAML form or previously compiled to JSON). Examples:
   * Redis backend serving JSON
   * File backend surving original YAML files (compiling on-demamd)
-2. `ShipperTool` uses [Planout4jShipperImpl](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/java/com/glassdoor/planout4j/config/Planout4jShipperImpl.java) to get all namespaces from **source** backend, compile & validate them, and store in **target** backend. File system - to - File system and File system - to - Redis are reasonable examples of the shipper setup.
+2. `ShipperTool` uses [Planout4jShipperImpl](https://github.com/zhiyuan-lin/planout4j/blob/master/config/src/main/java/com/zhiyuan-lin/planout4j/config/Planout4jShipperImpl.java) to get all namespaces from **source** backend, compile & validate them, and store in **target** backend. File system - to - File system and File system - to - Redis are reasonable examples of the shipper setup.
 
-Please see the [default configuration file](https://github.com/Glassdoor/planout4j/blob/master/config/src/main/resources/planout4j.conf) to learn about the settings and ways to override them.
+Please see the [default configuration file](https://github.com/zhiyuan-lin/planout4j/blob/master/config/src/main/resources/planout4j.conf) to learn about the settings and ways to override them.
 
 ## Using PlanOut4J
 Please see detailed instructions [here](USAGE.md)
 
-Also please take a look at [demos](https://github.com/Glassdoor/planout4j/tree/master/demos/src/main/java/com/glassdoor/planout4j/demos)
+Also please take a look at [demos](https://github.com/zhiyuan-lin/planout4j/tree/master/demos/src/main/java/com/zhiyuan-lin/planout4j/demos)
 
 If you have any questions and/or suggestions, please join [PlanOut4J Google group](https://groups.google.com/d/forum/planout4j)
 

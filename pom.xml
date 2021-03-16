@@ -10,7 +10,7 @@
 
     <name>planout4j parent</name>
     <description>PlanOut for Java - parent POM</description>
-    <url>https://github.com/Glassdoor/planout4j</url>
+    <url>https://github.com/zhiyuan-lin/planout4j</url>
 
 
     <licenses>
@@ -51,9 +51,9 @@
 
 
     <scm>
-        <connection>scm:git:git://github.com/Glassdoor/planout4j.git</connection>
-        <developerConnection>scm:git:git@github.com:Glassdoor/planout4j.git</developerConnection>
-        <url>https://github.com/Glassdoor/planout4j</url>
+        <connection>scm:git:git://github.com/zhiyuan-lin/planout4j.git</connection>
+        <developerConnection>scm:git:git@github.com:zhiyuan-lin/planout4j.git</developerConnection>
+        <url>https://github.com/zhiyuan-lin/planout4j</url>
         <tag>HEAD</tag>
     </scm>
 
