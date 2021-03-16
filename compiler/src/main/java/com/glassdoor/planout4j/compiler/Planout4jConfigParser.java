@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.NamespaceConfig;
 import com.glassdoor.planout4j.config.ValidationException;
@@ -23,7 +22,7 @@ import com.glassdoor.planout4j.config.ValidationException;
  */
 public abstract class Planout4jConfigParser {
 
-    private final static Map<String, String> ALIASES = ImmutableMap.of(
+    private final static Map<String, String> ALIASES = Map.of(
             "yaml", YAMLConfigParser.class.getName(),
             "json", JSONConfigParser.class.getName());
 

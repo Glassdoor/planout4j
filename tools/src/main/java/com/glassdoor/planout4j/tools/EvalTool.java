@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,6 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.*;
 import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
@@ -59,7 +58,7 @@ public class EvalTool {
                 evaluateNamespace(parsedArgs, name, inputMap) : evaluateStandalone(parsedArgs, script, inputMap);
         if (outcome != null) {
             System.out.println(
-                    Planout4jTool.getGson(new Namespace(ImmutableMap.<String, Object>of("pretty", Boolean.TRUE)))
+                    Planout4jTool.getGson(new Namespace(Map.of("pretty", Boolean.TRUE)))
                             .toJson(outcome));
         }
     }

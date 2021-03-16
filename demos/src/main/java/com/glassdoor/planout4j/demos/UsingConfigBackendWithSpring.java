@@ -2,14 +2,13 @@ package com.glassdoor.planout4j.demos;
 
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.Namespace;
 import com.glassdoor.planout4j.NamespaceFactory;
@@ -26,7 +25,7 @@ public class UsingConfigBackendWithSpring {
     private NamespaceFactory namespaceFactory;
 
     public void run(String unit) {
-        Optional<Namespace> ns = namespaceFactory.getNamespace("demo_namespace", ImmutableMap.of("user_guid", unit));
+        Optional<Namespace> ns = namespaceFactory.getNamespace("demo_namespace", Map.of("user_guid", unit));
         if (ns.isPresent()) {
             // get all params at once
             Map<String, ?> allParams = ns.get().getParams();

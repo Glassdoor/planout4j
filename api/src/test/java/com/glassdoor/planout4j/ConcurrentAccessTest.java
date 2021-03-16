@@ -21,7 +21,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.SetMultimap;
 
 import com.glassdoor.planout4j.config.Planout4jTestConfigHelper;
@@ -54,7 +53,7 @@ public class ConcurrentAccessTest {
 
         // initialize
         System.out.printf("*** Profiling parameter %s of namespace %s\n", paramName, namespaceName);
-        assertNotNull(namespaceFactory.getNamespace(namespaceName, ImmutableMap.of("user_guid", "")).get());
+        assertNotNull(namespaceFactory.getNamespace(namespaceName, Map.of("user_guid", "")).get());
         final RandomData random = createRandom();
         final ExecutorService threadPool = Executors.newFixedThreadPool(threadsCnt);
         final SetMultimap<String, String> resultsByUser = HashMultimap.create(totalUsers, 1);
@@ -73,7 +72,7 @@ public class ConcurrentAccessTest {
                 public void run() {
                     final String userGuid = guids.get(random.nextInt(0, totalUsers - 1));
                     MDC.put("user_guid", userGuid);
-                    final Namespace ns = namespaceFactory.getNamespace(namespaceName, ImmutableMap.of("user_guid", userGuid, "page_guid", "")).get();
+                    final Namespace ns = namespaceFactory.getNamespace(namespaceName, Map.of("user_guid", userGuid, "page_guid", "")).get();
                     final Object paramValue = ns.getParams().get(paramName);
                     final String experimentName = ns.getExperiment() == null ? "default" : ns.getExperiment().name;
                     synchronized (ConcurrentAccessTest.this) {

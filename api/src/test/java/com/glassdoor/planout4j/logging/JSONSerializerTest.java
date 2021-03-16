@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.glassdoor.planout4j.Namespace;
 import com.glassdoor.planout4j.NamespaceConfig;
-import com.google.common.collect.ImmutableMap;
 import org.json.simple.JSONValue;
 import org.junit.Test;
 
@@ -22,7 +21,7 @@ public class JSONSerializerTest {
         nsConf.setDefaultExperiment("def");
         nsConf.addExperiment("def_exp", "def", 100);
         nsConf.noMoreChanges();
-        final Map<String, ?> input = ImmutableMap.of("userid", 12345);
+        final Map<String, ?> input = Map.of("userid", 12345);
         final Namespace ns = new Namespace(nsConf, input, null);
         System.out.println(ser.doForward(new LogRecord(ns, input, null)));
     }

@@ -8,9 +8,6 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 import com.glassdoor.planout4j.planout.Interpreter;
 import com.glassdoor.planout4j.planout.ops.utils.MixedNumbersComparator;
 
@@ -37,7 +34,7 @@ public class CoreOpsTest {
     public void testSet() {
         Object c = new JSONObjectBuilder().p("op", "set").p("value", "x_val").p("var", "x");
         Map<String, Object> d = runConfig(c);
-        assertEquals(ImmutableMap.of("x", "x_val"), d);
+        assertEquals(Map.of("x", "x_val"), d);
     }
 
     @Test
@@ -47,7 +44,7 @@ public class CoreOpsTest {
                         .a(new JSONObjectBuilder().p("op", "set").p("value", "y_val").p("var", "y"))
         );
         Map <String, Object> d = runConfig(c);
-        assertEquals(ImmutableMap.of("x", "x_val", "y", "y_val"), d);
+        assertEquals(Map.of("x", "x_val", "y", "y_val"), d);
     }
 
     @Test
@@ -100,14 +97,14 @@ public class CoreOpsTest {
                                     .p("if", new JSONObjectBuilder().p("op", "equals").p("left", i).p("right", 1))
                                     .p("then", new JSONObjectBuilder().p("op", "set").p("value", "x_1").p("var", "x")))
             );
-            assertEquals(ImmutableMap.of("x", "x_"+i), runConfig(c));
+            assertEquals(Map.of("x", "x_"+i), runConfig(c));
         }
         Object c = new JSONObjectBuilder().p("op", "cond").p("cond", new JSONArrayBuilder()
                 .a(new JSONObjectBuilder()
                         .p("if", new JSONObjectBuilder().p("op", "equals").p("left", 1).p("right", 0))
                         .p("then", new JSONObjectBuilder().p("op", "set").p("value", "x_0").p("var", "x")))
         );
-        assertEquals(ImmutableMap.of(), runConfig(c));
+        assertEquals(Map.of(), runConfig(c));
     }
 
     @Test
@@ -118,7 +115,7 @@ public class CoreOpsTest {
                                 .a(new JSONObjectBuilder().p("op", "set").p("value", new JSONObjectBuilder().p("op", "get").p("var", "x")).p("var", "y"))
                 )
         );
-        assertEquals(ImmutableMap.of("x", "x_val", "y", "x_val"), d);
+        assertEquals(Map.of("x", "x_val", "y", "x_val"), d);
     }
 
     @Test
@@ -157,7 +154,7 @@ public class CoreOpsTest {
     @Test
     public void testLength() {
         // arrays, literal and not
-        List array = ImmutableList.of(0, 1, 2, 3, 4);
+        List array = List.of(0, 1, 2, 3, 4);
         Object lengthTest = runConfigSingle(new JSONObjectBuilder().p("op", "length").p("value", array));
         assertEquals(array.size(), lengthTest);
         lengthTest = runConfigSingle(new JSONObjectBuilder().p("op", "length").p("value", Collections.EMPTY_LIST));
@@ -165,7 +162,7 @@ public class CoreOpsTest {
         lengthTest = runConfigSingle(new JSONObjectBuilder().p("op", "length").p("value", new JSONObjectBuilder().p("op", "array").p("values", array)));
         assertEquals(array.size(), lengthTest);
         // dict
-        Map dict = ImmutableMap.of("a", 1, "b", 2);
+        Map dict = Map.of("a", 1, "b", 2);
         lengthTest = runConfigSingle(new JSONObjectBuilder().p("op", "length").p("value", dict));
         assertEquals(dict.size(), lengthTest);
         lengthTest = runConfigSingle(new JSONObjectBuilder().p("op", "length").p("value", Collections.EMPTY_MAP));
@@ -192,7 +189,7 @@ public class CoreOpsTest {
         assertFalse((Boolean) x);
         x = runConfigSingle(new JSONObjectBuilder().p("op", "not").p("value", true));
         assertFalse((Boolean) x);
-        x = runConfigSingle(new JSONObjectBuilder().p("op", "not").p("value", ImmutableMap.of("a", 42)));
+        x = runConfigSingle(new JSONObjectBuilder().p("op", "not").p("value", Map.of("a", 42)));
         assertFalse((Boolean) x);
         x = runConfigSingle(new JSONObjectBuilder().p("op", "not").p("value", "abc"));
         assertFalse((Boolean) x);
@@ -200,28 +197,28 @@ public class CoreOpsTest {
 
     @Test
     public void testOr() {
-        Object x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", ImmutableList.of(0, 0, 0)));
+        Object x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", List.of(0, 0, 0)));
         assertFalse((Boolean)x);
-        x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", ImmutableList.of(0, 0, 1)));
+        x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", List.of(0, 0, 1)));
         assertTrue((Boolean) x);
-        x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", ImmutableList.of(false, true, false)));
+        x = runConfigSingle(new JSONObjectBuilder().p("op", "or").p("values", List.of(false, true, false)));
         assertTrue((Boolean) x);
     }
 
     @Test
     public void testAnd() {
-        Object x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", ImmutableList.of(1, 1, 0)));
+        Object x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", List.of(1, 1, 0)));
         assertFalse((Boolean)x);
-        x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", ImmutableList.of(0, 0, 1)));
+        x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", List.of(0, 0, 1)));
         assertFalse((Boolean) x);
-        x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", ImmutableList.of(true, true, true)));
+        x = runConfigSingle(new JSONObjectBuilder().p("op", "and").p("values", List.of(true, true, true)));
         assertTrue((Boolean) x);
     }
 
     @Test
     public void testCommutative() {
-        List arr = ImmutableList.of(33, 7, 18, 21, -3, 10000, 10000);
-        List arrReal = ImmutableList.of(33, 7.0, 18, 21, -3, 10000, 10000);
+        List arr = List.of(33, 7, 18, 21, -3, 10000, 10000);
+        List arrReal = List.of(33, 7.0, 18, 21, -3, 10000, 10000);
         Object minTest = runConfigSingle(new JSONObjectBuilder().p("op", "min").p("values", arr));
         assertEquals(Collections.min(arr), minTest);
         minTest = runConfigSingle(new JSONObjectBuilder().p("op", "min").p("values", arrReal));
@@ -284,16 +281,16 @@ public class CoreOpsTest {
     @Test
     public void testReturn() {
         Interpreter i = returnRunner(true);
-        assertEquals(ImmutableMap.of("x", 2), i.getParams());
+        assertEquals(Map.of("x", 2), i.getParams());
         assertTrue(i.isInExperiment());
         i = returnRunner(42);
-        assertEquals(ImmutableMap.of("x", 2), i.getParams());
+        assertEquals(Map.of("x", 2), i.getParams());
         assertTrue(i.isInExperiment());
         i = returnRunner(false);
-        assertEquals(ImmutableMap.of("x", 2), i.getParams());
+        assertEquals(Map.of("x", 2), i.getParams());
         assertFalse(i.isInExperiment());
         i = returnRunner(0);
-        assertEquals(ImmutableMap.of("x", 2), i.getParams());
+        assertEquals(Map.of("x", 2), i.getParams());
         assertFalse(i.isInExperiment());
     }
 

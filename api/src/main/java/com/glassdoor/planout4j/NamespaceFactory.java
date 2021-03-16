@@ -1,8 +1,7 @@
 package com.glassdoor.planout4j;
 
 import java.util.Map;
-
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Primary entry point into Planout4j library.

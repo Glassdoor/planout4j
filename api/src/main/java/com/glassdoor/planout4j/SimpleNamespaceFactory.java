@@ -2,6 +2,7 @@ package com.glassdoor.planout4j;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import com.glassdoor.planout4j.config.Planout4jRepository;
 import com.glassdoor.planout4j.config.Planout4jRepositoryImpl;
@@ -11,7 +12,6 @@ import com.glassdoor.planout4j.logging.Planout4jLogger;
 import com.glassdoor.planout4j.logging.Planout4jLoggerFactory;
 import com.glassdoor.planout4j.util.VersionLogger;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
         } else {
             ns = null;
         }
-        return Optional.fromNullable(ns);
+        return Optional.ofNullable(ns);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SimpleNamespaceFactory implements NamespaceFactory {
     @Override
     public Optional<NamespaceConfig> getNamespaceConfig(final String name) {
         final Map<String, NamespaceConfig> configMap = getConfigMap();
-        return Optional.fromNullable(configMap.get(name));
+        return Optional.ofNullable(configMap.get(name));
     }
 
     public void refresh() {

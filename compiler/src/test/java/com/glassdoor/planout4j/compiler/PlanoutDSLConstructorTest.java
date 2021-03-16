@@ -1,6 +1,5 @@
 package com.glassdoor.planout4j.compiler;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -16,7 +15,7 @@ public class PlanoutDSLConstructorTest {
         Map map = parse("key: value");
         assertEquals("value", map.get("key"));
         map = parse("key: \n  nestedKey: nestedValue");
-        assertEquals(ImmutableMap.of("nestedKey", "nestedValue"), map.get("key"));
+        assertEquals(Map.of("nestedKey", "nestedValue"), map.get("key"));
         map = parse("key: |\n  value");
         assertEquals("value", map.get("key"));
         testFailure("key: !planout\n  nestedKey: nestedValue");

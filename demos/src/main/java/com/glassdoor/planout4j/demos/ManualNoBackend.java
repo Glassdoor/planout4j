@@ -4,8 +4,6 @@ import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 import com.glassdoor.planout4j.Namespace;
 import com.glassdoor.planout4j.NamespaceConfig;
 import com.glassdoor.planout4j.compiler.YAMLConfigParser;
@@ -23,7 +21,7 @@ public class ManualNoBackend {
     }
 
     public void run(String unit) {
-        Namespace ns = new Namespace(nsConf, ImmutableMap.of("user_guid", unit), null);
+        Namespace ns = new Namespace(nsConf, Map.of("user_guid", unit), null);
         // get all params at once
         Map<String, ?> allParams = ns.getParams();
         // get params individually using defaults

@@ -4,8 +4,6 @@ import java.util.*;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.junit.Test;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
@@ -64,7 +62,7 @@ public class RandomOpsTest {
             }
         } else {
             // just wrap the list
-            xsList = ImmutableList.of(xs);
+            xsList = List.of(xs);
         }
         // test outcome frequencies against expected density
         for (List<Object> l : xsList) {
@@ -131,60 +129,60 @@ public class RandomOpsTest {
     @Test
     public void testBernoulli() {
         double p = 0.0;
-        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, ImmutableMap.of("p", p)),
-                ImmutableMap.of(false, 1.0, true, 0.0));
+        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, Map.of("p", p)),
+                Map.of(false, 1.0, true, 0.0));
         p = 0.1;
-        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, ImmutableMap.of("p", p)),
-                ImmutableMap.of(false, 0.9, true, 0.1));
+        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, Map.of("p", p)),
+                Map.of(false, 0.9, true, 0.1));
         p = 1.0;
-        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, ImmutableMap.of("p", p)),
-                ImmutableMap.of(false, 0.0, true, 1.0));
+        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, Map.of("p", p)),
+                Map.of(false, 0.0, true, 1.0));
         p = 0.5;
-        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, ImmutableMap.of("p", p)),
-                ImmutableMap.of(false, 0.5, true, 0.5));
+        distributionTester(new RandomFunctionBuilder(p, BernoulliTrial.class, Map.of("p", p)),
+                Map.of(false, 0.5, true, 0.5));
     }
 
     @Test
     public void testUniformChoice() {
-        List<?> c = ImmutableList.of("a");
-        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, ImmutableMap.of("choices", c)),
-                ImmutableMap.of("a", 1));
-        c = ImmutableList.of("a", "b");
-        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, ImmutableMap.of("choices", c)),
-                ImmutableMap.of("a", 1, "b", 1));
-        c = ImmutableList.of(1, 2, 3, 4);
-        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, ImmutableMap.of("choices", c)),
-                ImmutableMap.of(1, 1, 2, 1, 3, 1, 4, 1));
+        List<?> c = List.of("a");
+        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, Map.of("choices", c)),
+                Map.of("a", 1));
+        c = List.of("a", "b");
+        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, Map.of("choices", c)),
+                Map.of("a", 1, "b", 1));
+        c = List.of(1, 2, 3, 4);
+        distributionTester(new RandomFunctionBuilder(c, UniformChoice.class, Map.of("choices", c)),
+                Map.of(1, 1, 2, 1, 3, 1, 4, 1));
     }
 
     @Test
     public void testWeightedChoice() {
-        Map<String, ? extends Number> d = ImmutableMap.of("a", 1);
+        Map<String, ? extends Number> d = Map.of("a", 1);
         distributionTester(new RandomFunctionBuilder(d.values(), WeightedChoice.class,
-                ImmutableMap.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
-        d = ImmutableMap.of("a", 1, "b", 2);
+                Map.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
+        d = Map.of("a", 1, "b", 2);
         distributionTester(new RandomFunctionBuilder(d.values(), WeightedChoice.class,
-                ImmutableMap.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
-        d = ImmutableMap.of("a", 0, "b", 2, "c", 0);
+                Map.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
+        d = Map.of("a", 0, "b", 2, "c", 0);
         distributionTester(new RandomFunctionBuilder(d.values(), WeightedChoice.class,
-                ImmutableMap.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
+                Map.of("choices", new ArrayList<>(d.keySet()), "weights", new ArrayList<>(d.values()))), d);
         // we should be able to repeat the same choice multiple times in weightedChoice(). in this case we repeat 'a'.
         Multimap<String, ? extends Number> da = ImmutableMultimap.of("a", 1, "b", 2, "c", 0, "a", 2);
-        Map<String, ? extends Number> db = ImmutableMap.of("a", 3, "b", 2, "c", 0);
+        Map<String, ? extends Number> db = Map.of("a", 3, "b", 2, "c", 0);
         distributionTester(new RandomFunctionBuilder(da.values(), WeightedChoice.class,
-                ImmutableMap.of("choices", new ArrayList<>(da.keys()), "weights", new ArrayList<>(da.values()))), db);
+                Map.of("choices", new ArrayList<>(da.keys()), "weights", new ArrayList<>(da.values()))), db);
     }
 
     @Test
     public void testSample() {
-        List<?> c = ImmutableList.of(1, 2, 3);
-        distributionTester(new RandomFunctionBuilder(c, Sample.class, ImmutableMap.of("choices", c, "draws", 3)),
-                ImmutableMap.of(1, 1, 2, 1, 3, 1));
-        distributionTester(new RandomFunctionBuilder(c, Sample.class, ImmutableMap.of("choices", c, "draws", 2)),
-                ImmutableMap.of(1, 1, 2, 1, 3, 1));
-        c = ImmutableList.of("a", "a", "b");
-        distributionTester(new RandomFunctionBuilder(c, Sample.class, ImmutableMap.of("choices", c, "draws", 3)),
-                ImmutableMap.of("a", 2, "b", 1));
+        List<?> c = List.of(1, 2, 3);
+        distributionTester(new RandomFunctionBuilder(c, Sample.class, Map.of("choices", c, "draws", 3)),
+                Map.of(1, 1, 2, 1, 3, 1));
+        distributionTester(new RandomFunctionBuilder(c, Sample.class, Map.of("choices", c, "draws", 2)),
+                Map.of(1, 1, 2, 1, 3, 1));
+        c = List.of("a", "a", "b");
+        distributionTester(new RandomFunctionBuilder(c, Sample.class, Map.of("choices", c, "draws", 3)),
+                Map.of("a", 2, "b", 1));
     }
 
 
@@ -193,19 +191,19 @@ public class RandomOpsTest {
         String fullSalt = "some long value";
         for (int i=0; i < 6; i++) {
             String unit = UUID.randomUUID().toString();
-            WeightedChoice<Integer> weightedChoice = new WeightedChoice<>(ImmutableList.of(10, 20), ImmutableList.of(0.25, 0.75), unit);
+            WeightedChoice<Integer> weightedChoice = new WeightedChoice<>(List.of(10, 20), List.of(0.25, 0.75), unit);
             weightedChoice.setFullSalt(fullSalt);
             int choice = weightedChoice.eval();
-            WeightedChoice<Integer> weightedChoice2 = new WeightedChoice<>(ImmutableList.of(1, 2, 3, 4), ImmutableList.of(0.25, 0.25, 0.25, 0.25), unit);
+            WeightedChoice<Integer> weightedChoice2 = new WeightedChoice<>(List.of(1, 2, 3, 4), List.of(0.25, 0.25, 0.25, 0.25), unit);
             weightedChoice2.setFullSalt(fullSalt);
             int choice2 = weightedChoice2.eval();
             assertTrue(choice == 10 && choice2 == 1 || choice == 20 && choice2 > 1);
 
-            UniformChoice<List> uniformChoice = new UniformChoice<List>(ImmutableList.<List>of(
-                    ImmutableList.of(1, 2, 3), ImmutableList.of(10, 20)), unit);
+            UniformChoice<List> uniformChoice = new UniformChoice<>(List.of(
+                    List.of(1, 2, 3), List.of(10, 20)), unit);
             uniformChoice.setFullSalt(fullSalt);
             List uchoice = uniformChoice.eval();
-            UniformChoice<Boolean> uniformChoice2 = new UniformChoice<Boolean>(ImmutableList.of(false, true), unit);
+            UniformChoice<Boolean> uniformChoice2 = new UniformChoice<>(List.of(false, true), unit);
             uniformChoice2.setFullSalt(fullSalt);
             Boolean uchoice2 = uniformChoice2.eval();
             assertTrue(uchoice.size() == 3 && !uchoice2 || uchoice.size() == 2 && uchoice2);
@@ -216,12 +214,12 @@ public class RandomOpsTest {
     @Test
     public void testGetIntArg() {
         // this should work as 1.0 (double) and 1.0 (float) can be seen as integers
-        RandomInteger randomInteger = new RandomInteger(new HashMap<>(ImmutableMap.<String, Object>of(
+        RandomInteger randomInteger = new RandomInteger(new HashMap<>(Map.<String, Object>of(
                 "min", 1.0, "max", 1.0f, "unit", "q")));
         assertEquals(new Long(1), randomInteger.eval());
         try {
             // this should fail as 1.1 cannot be seen as an integer
-            new RandomInteger(new HashMap<>(ImmutableMap.<String, Object>of("min", 1.0, "max", 1.1, "unit", "q"))).eval();
+            new RandomInteger(new HashMap<>(Map.<String, Object>of("min", 1.0, "max", 1.1, "unit", "q"))).eval();
             fail("Expected IllegalStateException");
         } catch (IllegalStateException e) {}
     }

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.planout.ops.random.PlanOutOpRandom;
 
@@ -16,7 +15,7 @@ import static java.lang.String.format;
  */
 public class Assignment extends Mapper {
 
-    private static final Map<String, String> RESERVED_NAMES = ImmutableMap.of(
+    private static final Map<String, String> RESERVED_NAMES = Map.of(
             "data", "data", "_overrides", "overrides", "experiment_salt", "experimentSalt");
 
     private final Map<String, Object> data;

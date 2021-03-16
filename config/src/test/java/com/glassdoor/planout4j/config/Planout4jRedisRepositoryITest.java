@@ -6,7 +6,6 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.ConfigFactory;
 import redis.embedded.RedisServer;
 
@@ -26,7 +25,7 @@ public class Planout4jRedisRepositoryITest {
       redisServer.start();
       redisBackend = new Planout4jConfigRedisBackend();
       redisBackend.configure(ConfigFactory.parseMap(
-                  ImmutableMap.of("host", "localhost", "port", TEST_PORT, "key", "planout4j")));
+                  Map.of("host", "localhost", "port", TEST_PORT, "key", "planout4j")));
    }
    
    @After
@@ -37,10 +36,10 @@ public class Planout4jRedisRepositoryITest {
    @Test
    public void testStoreAndLoad() {
       assertThat(redisBackend.loadAll()).isEmpty();
-      persistAndCheck(ImmutableMap.of("namespace1", "data1"));
-      persistAndCheck(ImmutableMap.of("namespace2", "data2"));
-      persistAndCheck(ImmutableMap.of("namespace1", "data1", "namespace2", "data2"));
-      persistAndCheck(ImmutableMap.<String, String>of());
+      persistAndCheck(Map.of("namespace1", "data1"));
+      persistAndCheck(Map.of("namespace2", "data2"));
+      persistAndCheck(Map.of("namespace1", "data1", "namespace2", "data2"));
+      persistAndCheck(Map.of());
    }
 
    private void persistAndCheck(Map<String, String> e_configs) {

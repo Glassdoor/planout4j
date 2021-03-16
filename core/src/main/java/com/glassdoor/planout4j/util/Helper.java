@@ -7,6 +7,7 @@ import org.apache.commons.collections4.ComparatorUtils;
 import com.google.common.base.MoreObjects;
 
 import com.glassdoor.planout4j.planout.ops.utils.MixedNumbersComparator;
+import com.google.common.collect.ImmutableCollection;
 
 import static com.google.common.base.Preconditions.*;
 import static java.lang.String.format;
@@ -46,6 +47,7 @@ public class Helper {
         if (o instanceof Boolean) {
             return (Boolean)o;
         }
+
         // the below code covers String, List, Map, etc.
         try {
             return !((Boolean)o.getClass().getMethod("isEmpty").invoke(o));
