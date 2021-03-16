@@ -95,8 +95,7 @@ public class Helper {
      * @return either {@link com.glassdoor.planout4j.planout.ops.utils.MixedNumbersComparator} or
      *         {@link org.apache.commons.collections4.ComparatorUtils#NATURAL_COMPARATOR}
      */
-    @SuppressWarnings("unchecked")
-    public static Comparator<Object> getComparator(final List<Object> values, final Class caller) {
+    public static Comparator getComparator(final List<Object> values, final Class caller) {
         boolean useMixedNumbersComparator = false;
         for (Object value : values) {
             if (value instanceof Number) {
