@@ -1,9 +1,9 @@
 package com.glassdoor.planout4j;
 
 import java.io.InputStreamReader;
+import java.util.Map;
 
 import org.junit.Test;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.compiler.JSONConfigParser;
 
@@ -23,11 +23,11 @@ public class NamespaceTest {
     @Test
     public void testPhase1() throws Exception {
         NamespaceConfig nsConf = loadConfig("ns_test1");
-        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 15l, "use_pclick", true),
-                new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph2_user), null).getParams());
+        assertEquals(Map.of("srJobsResultsPerPage", 15l, "use_pclick", true),
+                     new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph2_user), null).getParams());
         processPhase1(nsConf);
-        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 15l, "use_pclick", true),
-                new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user, Namespace.BASELINE_KEY, true), null).getParams());
+        assertEquals(Map.of("srJobsResultsPerPage", 15l, "use_pclick", true),
+                new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user, Namespace.BASELINE_KEY, true), null).getParams());
     }
 
     @Test
@@ -43,23 +43,23 @@ public class NamespaceTest {
     private void processPhase1(NamespaceConfig nsConf) {
         // no unit in the input map
         try {
-            new Namespace(nsConf, ImmutableMap.of("foo", 0), null);
+            new Namespace(nsConf, Map.of("foo", 0), null);
             fail("Expected an error");
         } catch (RuntimeException e) {}
-        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 15l, "useParallelSegmentSearch", true, "use_pclick", true),
-                ImmutableMap.copyOf(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParams()));
-        assertEquals(15, new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("srJobsResultsPerPage", -1));
-        assertEquals(-1, new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("foo", -1));
-        assertTrue(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), null).getParam("use_pclick", false));
+        assertEquals(Map.of("srJobsResultsPerPage", 15l, "useParallelSegmentSearch", true, "use_pclick", true),
+                Map.copyOf(new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user), null).getParams()));
+        assertEquals(15, new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user), null).getParam("srJobsResultsPerPage", -1));
+        assertEquals(-1, new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user), null).getParam("foo", -1));
+        assertTrue(new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user), null).getParam("use_pclick", false));
         // freezing one of the computed params
-        assertEquals(ImmutableMap.of("srJobsResultsPerPage", 30l, "useParallelSegmentSearch", true, "use_pclick", true),
-                ImmutableMap.copyOf(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph1_user), ImmutableMap.of("srJobsResultsPerPage", 30l)).getParams()));
+        assertEquals(Map.of("srJobsResultsPerPage", 30l, "useParallelSegmentSearch", true, "use_pclick", true),
+                Map.copyOf(new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph1_user), Map.of("srJobsResultsPerPage", 30l)).getParams()));
 
     }
 
     private void processPhase2(NamespaceConfig nsConf) {
-        assertEquals(ImmutableMap.of("rating_filter_boxes", "radio", "use_check_boxes_for_job_type_filter", true, "srJobsResultsPerPage", 15l, "use_pclick", true),
-                ImmutableMap.copyOf(new Namespace(nsConf, ImmutableMap.of("user_guid", Speed_NR_Ph2_user), null).getParams()));
+        assertEquals(Map.of("rating_filter_boxes", "radio", "use_check_boxes_for_job_type_filter", true, "srJobsResultsPerPage", 15l, "use_pclick", true),
+                Map.copyOf(new Namespace(nsConf, Map.of("user_guid", Speed_NR_Ph2_user), null).getParams()));
     }
 
     private NamespaceConfig loadConfig(String fileName) throws Exception {

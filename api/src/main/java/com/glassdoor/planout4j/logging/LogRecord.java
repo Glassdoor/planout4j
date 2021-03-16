@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import com.glassdoor.planout4j.Namespace;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableMap;
 
 
 /**
@@ -21,9 +20,9 @@ public class LogRecord {
 
     public LogRecord(final Namespace namespace, final Map<String, ?> input, final Map<String, ?> overrides) {
         this.namespace = namespace;
-        this.input = ImmutableMap.copyOf(input);
+        this.input = Map.copyOf(input);
         //noinspection unchecked,CollectionsFieldAccessReplaceableByMethodCall
-        this.overrides = overrides == null ? Collections.EMPTY_MAP : ImmutableMap.copyOf(overrides);
+        this.overrides = overrides == null ? Collections.EMPTY_MAP : Map.copyOf(overrides);
     }
 
 

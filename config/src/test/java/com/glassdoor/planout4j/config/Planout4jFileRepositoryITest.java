@@ -26,7 +26,7 @@ public class Planout4jFileRepositoryITest {
    public void setup() {
       fileBackend = new Planout4jConfigFileBackend();
       fileBackend.configure(ConfigFactory.parseMap(
-              ImmutableMap.of("sourceDirHierarchy", "src/test/resources/namespaces",
+              Map.of("sourceDirHierarchy", "src/test/resources/namespaces",
                               "destDirHierarchy", "src/test/resources/namespaces/output",
                               "inputFileNamesPattern", "*",
                               "outputFileExtension", ".yaml")));
@@ -46,7 +46,7 @@ public class Planout4jFileRepositoryITest {
 
    @Test
    public void storeInRepository() {
-      Map<String, String> e_configs = ImmutableMap.of("filename", "content");
+      Map<String, String> e_configs = Map.of("filename", "content");
       fileBackend.persist(e_configs);
       
       fileBackend.setSourceDirHierarchy(fileBackend.getDestDirHierarchy());

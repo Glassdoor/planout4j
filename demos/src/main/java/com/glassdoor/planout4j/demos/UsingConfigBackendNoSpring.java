@@ -2,9 +2,7 @@ package com.glassdoor.planout4j.demos;
 
 import java.nio.file.Paths;
 import java.util.Map;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
 
 import com.glassdoor.planout4j.Namespace;
 import com.glassdoor.planout4j.NamespaceFactory;
@@ -24,7 +22,7 @@ public class UsingConfigBackendNoSpring {
     }
 
     public void run(String unit) {
-        Optional<Namespace> ns = namespaceFactory.getNamespace("demo_namespace", ImmutableMap.of("user_guid", unit));
+        Optional<Namespace> ns = namespaceFactory.getNamespace("demo_namespace", Map.of("user_guid", unit));
         if (ns.isPresent()) {
             // get all params at once
             Map<String, ?> allParams = ns.get().getParams();

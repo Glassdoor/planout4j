@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import com.glassdoor.planout4j.NamespaceConfig;
 import com.glassdoor.planout4j.config.NamespaceConfigBuilder;
 import com.glassdoor.planout4j.config.ValidationException;
@@ -31,7 +29,7 @@ public class NamespaceConfigBuilderTest {
         assertEquals(50, nsConf.getUsedSegments());
         assertNotNull(nsConf.getDefaultExperiment());
         try {
-            nsConf.defineExperiment("foo", ImmutableMap.of("bar", "baz"));
+            nsConf.defineExperiment("foo", Map.of("bar", "baz"));
             fail("Expected IllegalStateException");
         } catch (IllegalStateException e) {}
     }

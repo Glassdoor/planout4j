@@ -2,8 +2,8 @@ package com.glassdoor.planout4j.planout.ops.core;
 
 import com.glassdoor.planout4j.planout.ops.base.PlanOutOpBinary;
 import com.glassdoor.planout4j.util.Helper;
-import com.google.common.collect.ImmutableList;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ public abstract class PlanOutOpComparison extends PlanOutOpBinary<Boolean> {
 
     @Override
     protected Boolean binaryExecute(final Object left, final Object right) {
-        final int cmp = Objects.compare(left, right, Helper.getComparator(ImmutableList.of(left, right), getClass()));
+        final int cmp = Objects.compare(left, right, Helper.getComparator(List.of(left, right), getClass()));
         return comparisonExecute(cmp);
     }
 

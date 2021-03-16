@@ -3,6 +3,7 @@ package com.glassdoor.planout4j.tools;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.UUID;
 
@@ -11,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import net.sourceforge.argparse4j.inf.*;
 import net.sourceforge.argparse4j.inf.Namespace;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.*;
 import com.glassdoor.planout4j.compiler.PlanoutDSLCompiler;
@@ -70,7 +69,7 @@ public class PerfTool {
             final PriorityQueue<Long> worst05Heap = new PriorityQueue<>(worst05Cnt);
             System.out.println("Starting " + iterations + " iterations...");
             for (int i=0; i < iterations; i++) {
-                final Map<String, Object> inputMap = ImmutableMap.<String, Object>of(nsConf.get().unit, UUID.randomUUID().toString());
+                final Map<String, Object> inputMap = Map.of(nsConf.get().unit, UUID.randomUUID().toString());
                 long start = System.nanoTime();
                 if (exp != null) {
                     new Interpreter(exp.def.getCopyOfScript(), exp.salt, inputMap, null).getParams();

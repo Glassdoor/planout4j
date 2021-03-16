@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import com.google.common.collect.ImmutableMap;
 
 import com.glassdoor.planout4j.util.Helper;
 
@@ -14,11 +13,11 @@ public class PlanoutDSLCompilerTest {
 
     @Test
     public void test_dsl_to_json() throws Exception {
-        Map<String, ?>  tests = ImmutableMap.of(
+        Map<String, ?>  tests = Map.of(
                 "x = 2;",
-                ImmutableMap.of("op", "set", "var", "x", "value", 2.0),
+                Map.of("op", "set", "var", "x", "value", 2.0),
                 "return bernoulliTrial(0.1)",
-                ImmutableMap.of("op", "return", "value", ImmutableMap.of("value", 0.1, "op", "bernoulliTrial"))
+                Map.of("op", "return", "value", Map.of("value", 0.1, "op", "bernoulliTrial"))
         );
         for (String input : tests.keySet()) {
             Map output = PlanoutDSLCompiler.dsl_to_json(input);
