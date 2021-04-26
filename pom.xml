@@ -83,7 +83,7 @@
         <log4j12.version>1.2.17</log4j12.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-collections4.version>4.0</commons-collections4.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-math.version>2.2</commons-math.version>
         <guava.version>18.0</guava.version>
         <json-simple.version>1.1.1</json-simple.version>
