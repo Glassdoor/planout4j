@@ -87,7 +87,7 @@
         <commons-math.version>2.2</commons-math.version>
         <guava.version>18.0</guava.version>
         <json-simple.version>1.1.1</json-simple.version>
-        <snakeyaml.version>1.15</snakeyaml.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
         <typesafe-config.version>1.2.1</typesafe-config.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <jedis.version>2.7.2</jedis.version>
